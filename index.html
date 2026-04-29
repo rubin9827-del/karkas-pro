@@ -578,6 +578,7 @@ select option{background:var(--card);}
             <option value="30">30 дней</option>
           </select>
         </div>
+        <button class="price-add-btn" style="background:rgba(45,122,255,.15);border:2px solid var(--accent);color:var(--accent);" onclick="fillStandardPricelist()">📋 Заполнить стандартный прайс</button>
         <button class="price-add-btn" onclick="openAddMaterial()">+ Добавить материал</button>
       </div>
     </div>
@@ -1367,15 +1368,85 @@ window.deleteMaterial=async function(id){
   await deleteDoc(doc(db,'pricelist',id));
 };
 
-// ── SYNC SIDEBAR PRICES FROM PRICELIST ──
-function syncSidebarPrices(){
-  if(!Object.keys(allPrices).length) return;
+// ── FILL STANDARD PRICELIST ──
+window.fillStandardPricelist = async function(){
+  const existing = Object.values(allPrices).map(m=>(m.name||'').toLowerCase());
+  if(existing.length > 0){
+    if(!confirm(`В прайсе уже есть ${existing.length} позиций. Добавить только отсутствующие?`)) return;
+  }
 
-  // Map sidebar input keys → search patterns in pricelist material names
+  // Full standard pricelist — names must match keyMap patterns in syncSidebarPrices
+  const standard = [
+    // КАРКАС
+    { name:'Брус 100×50 мм',       unit:'м³',   category:'Каркас',    supplier:'Леруа Мерлен Тюмень', note:'Сечение стоек и обвязок' },
+    { name:'Брус 150×50 мм',       unit:'м³',   category:'Каркас',    supplier:'Леруа Мерлен Тюмень', note:'Усиленное сечение' },
+    { name:'Брус 200×50 мм',       unit:'м³',   category:'Каркас',    supplier:'Леруа Мерлен Тюмень', note:'Для высоких нагрузок' },
+    // КРОВЛЯ
+    { name:'Металлопрофиль С-21',  unit:'м²',   category:'Кровля',    supplier:'Кровля72.рф',          note:'Профлист кровельный' },
+    { name:'Профлист НС-35',       unit:'м²',   category:'Кровля',    supplier:'Кровля72.рф',          note:'Несущий профлист' },
+    { name:'Ондулин',              unit:'м²',   category:'Кровля',    supplier:'Леруа Мерлен Тюмень', note:'Битумный лист' },
+    { name:'Мягкая черепица',      unit:'м²',   category:'Кровля',    supplier:'Леруа Мерлен Тюмень', note:'Гибкая черепица' },
+    // ОБШИВКА
+    { name:'OSB-3 плита 9 мм',     unit:'лист', category:'Обшивка',   supplier:'Леруа Мерлен Тюмень', note:'1250×2500 мм, для стен' },
+    { name:'OSB-3 плита 12 мм',    unit:'лист', category:'Обшивка',   supplier:'Леруа Мерлен Тюмень', note:'1250×2500 мм, для кровли' },
+    // ПОЛ
+    { name:'OSB пол 18 мм',        unit:'лист', category:'Пол',       supplier:'Леруа Мерлен Тюмень', note:'1250×2500 мм, настил пола' },
+    // УТЕПЛИТЕЛЬ
+    { name:'Минвата 100 мм',       unit:'м³',   category:'Утеплитель',supplier:'ОБИ Тюмень',           note:'Плотность 35–50 кг/м³' },
+    { name:'Минвата 150 мм',       unit:'м³',   category:'Утеплитель',supplier:'ОБИ Тюмень',           note:'Плотность 35–50 кг/м³' },
+    { name:'Эковата',              unit:'м³',   category:'Утеплитель',supplier:'Другой',               note:'Целлюлозный утеплитель' },
+    // ПЛЁНКИ
+    { name:'Пароизоляция Б',       unit:'м²',   category:'Плёнки',    supplier:'Леруа Мерлен Тюмень', note:'Изоспан Б, рулон 70 м²' },
+    { name:'Ветрозащита А',        unit:'м²',   category:'Плёнки',    supplier:'Леруа Мерлен Тюмень', note:'Изоспан А, рулон 70 м²' },
+    // ОБРЕШЁТКА
+    { name:'Обрешётка 25×100 мм',  unit:'пм',   category:'Обрешётка', supplier:'Лесозавод Тюмень',    note:'Доска необрезная для обрешётки кровли' },
+    { name:'Брусок 50×50 мм',      unit:'пм',   category:'Обрешётка', supplier:'Лесозавод Тюмень',    note:'Контробрешётка, вентзазор' },
+    // ФУНДАМЕНТ
+    { name:'Свая винтовая Ø89 мм', unit:'шт',   category:'Фундамент', supplier:'СваяТюмень72.рф',     note:'Длина 2.5 м' },
+    { name:'Свая винтовая Ø108 мм',unit:'шт',   category:'Фундамент', supplier:'СваяТюмень72.рф',     note:'Длина 2.5–3 м' },
+    { name:'Свая винтовая Ø133 мм',unit:'шт',   category:'Фундамент', supplier:'СваяТюмень72.рф',     note:'Длина 3 м, усиленная' },
+    { name:'Столб бетонный 200×200',unit:'шт',  category:'Фундамент', supplier:'СтройАрсенал72',      note:'Столбчатый фундамент' },
+    // КРЕПЁЖ
+    { name:'Крепёж — саморезы, уголки, скобы', unit:'%', category:'Крепёж', supplier:'Крепёж72', note:'% от стоимости бруса' },
+  ];
+
+  // Add only missing items (check by name)
+  const existingNames = Object.values(allPrices).map(m=>(m.name||'').toLowerCase());
+  let added = 0;
+
+  for(const item of standard){
+    if(existingNames.includes(item.name.toLowerCase())) continue;
+    const newRef = doc(collection(db,'pricelist'));
+    await setDoc(newRef, {
+      ...item,
+      price: 0,
+      updatedAt: null,
+      history: [],
+      createdAt: new Date().toISOString(),
+    });
+    added++;
+  }
+
+  showSyncToast(added > 0 ? added : 0);
+  if(added === 0){
+    alert('Все стандартные позиции уже есть в прайсе.');
+  } else {
+    // small delay for Firebase to sync, then re-render
+    setTimeout(()=>renderPriceTab(), 600);
+  }
+};
+
+window.syncSidebarPrices = function(){
+  const keys = Object.keys(allPrices);
+  if(!keys.length){
+    alert('Прайс пустой — сначала добавьте материалы во вкладке «💰 Прайс»');
+    return;
+  }
+
   const keyMap={
     'brus': ['брус'],
     'osb':  ['osb','осб'],
-    'ins':  ['мин','утепл','mineral','wool','вата'],
+    'ins':  ['мин','утепл','вата'],
     'roof': ['кровл','профл','металлопроф','ондул','черепиц'],
     'vap':  ['паро','ветроз'],
     'resh': ['обреш'],
@@ -1384,55 +1455,49 @@ function syncSidebarPrices(){
     'fix':  ['крепёж','крепеж'],
   };
 
-  // For each sidebar field, find the best match in pricelist
+  let updated = 0;
   Object.entries(keyMap).forEach(([key, patterns])=>{
     let bestMatch = null;
-    Object.entries(allPrices).forEach(([id, mat])=>{
+    Object.values(allPrices).forEach(mat=>{
       const nameLow = (mat.name||'').toLowerCase();
       if(patterns.some(p => nameLow.includes(p))){
-        // Prefer most recently updated
-        if(!bestMatch || (mat.updatedAt > (bestMatch.updatedAt||''))){
+        if(!bestMatch || (mat.updatedAt||'') > (bestMatch.updatedAt||''))
           bestMatch = mat;
-        }
       }
     });
-
     if(bestMatch && bestMatch.price > 0){
-      // Update price
       const priceEl = document.getElementById('p-'+key);
-      if(priceEl) priceEl.value = bestMatch.price;
-      // Update supplier
+      if(priceEl){ priceEl.value = bestMatch.price; updated++; }
       const srcEl = document.getElementById('src-'+key);
       if(srcEl && bestMatch.supplier) srcEl.value = bestMatch.supplier;
-      // Update URL
       const urlEl = document.getElementById('url-'+key);
       if(urlEl && bestMatch.url) urlEl.value = bestMatch.url;
     }
   });
 
-  // Show sync notification
-  showSyncToast();
-}
+  showSyncToast(updated);
+};
 
-function showSyncToast(){
+function showSyncToast(count){
   let toast = document.getElementById('syncToast');
   if(!toast){
     toast = document.createElement('div');
     toast.id = 'syncToast';
-    toast.style.cssText = `
-      position:fixed;bottom:24px;right:24px;z-index:9999;
-      background:#1a1e2c;border:2px solid #3ecf82;border-radius:10px;
-      padding:10px 18px;font-size:12px;font-weight:700;color:#3ecf82;
-      display:flex;align-items:center;gap:8px;
-      box-shadow:0 8px 24px rgba(0,0,0,.4);
-      transition:opacity .4s;
-    `;
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#1a1e2c;border:2px solid #3ecf82;border-radius:10px;padding:10px 18px;font-size:12px;font-weight:700;color:#3ecf82;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:opacity .4s;';
     document.body.appendChild(toast);
   }
-  toast.innerHTML = '✓ Цены подтянуты из прайса';
+  if(count > 0){
+    toast.innerHTML = `✓ Обновлено ${count} цен из прайса`;
+    toast.style.color = '#3ecf82';
+    toast.style.borderColor = '#3ecf82';
+  } else {
+    toast.innerHTML = '⚠ Совпадений не найдено — проверьте названия в прайсе';
+    toast.style.color = '#f0a500';
+    toast.style.borderColor = '#f0a500';
+  }
   toast.style.opacity = '1';
   clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(()=>{ toast.style.opacity='0'; }, 3000);
+  window._toastTimer = setTimeout(()=>{ toast.style.opacity='0'; }, 3500);
 }
 
 </script>
