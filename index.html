@@ -3,37 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>КаркасПро</title>
+<title>tmn Frame — Расчёт материалов</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#111318;--panel:#1a1d27;--card:#20243a;--border:#2c3155;
-  --accent:#f0a500;--accent2:#e05520;--text:#eef0fc;--muted:#6b739e;
-  --green:#3ecf82;--red:#e05555;
+  --bg:#0d0f14;--panel:#13161f;--card:#1a1e2c;--border:#252a40;
+  --accent:#2d7aff;--accent2:#1a4fa8;--gold:#f0a500;
+  --text:#eef0fc;--muted:#6b739e;--green:#3ecf82;--red:#e05555;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ══ AUTH SCREENS ══ */
+/* ══ AUTH ══ */
 .auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;}
 .auth-screen.active{display:flex;}
-.auth-logo{font-family:'Bebas Neue';font-size:48px;letter-spacing:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
-.auth-sub{font-size:12px;color:var(--muted);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:36px;}
+.auth-logo{font-family:'Bebas Neue';font-size:52px;letter-spacing:6px;color:var(--text);margin-bottom:4px;line-height:1;}
+.auth-logo span{color:var(--accent);}
+.auth-sub{font-size:11px;color:var(--muted);letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-bottom:36px;}
 .auth-box{background:var(--panel);border:2px solid var(--border);border-radius:16px;padding:32px;width:380px;max-width:95vw;}
 .auth-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:22px;}
 .auth-field{margin-bottom:14px;}
 .auth-field label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
 .auth-field input{width:100%;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:'Inter';font-size:14px;font-weight:600;transition:.2s;}
 .auth-field input:focus{outline:none;border-color:var(--accent);}
-.auth-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:6px;}
-.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.28);}
-.auth-btn:disabled{opacity:.5;transform:none;cursor:not-allowed;}
+.auth-btn{width:100%;padding:12px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:6px;}
+.auth-btn:hover{background:var(--accent2);}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;}
 .auth-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);}
-.auth-switch a{color:var(--accent);cursor:pointer;font-weight:700;text-decoration:none;}
+.auth-switch a{color:var(--accent);cursor:pointer;font-weight:700;}
 .auth-error{background:rgba(224,85,85,.1);border:1px solid var(--red);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--red);margin-bottom:14px;display:none;}
 .auth-error.show{display:block;}
-
-/* Pending screen */
 .pending-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
 .pending-screen.active{display:flex;}
 .pending-icon{font-size:60px;margin-bottom:20px;}
@@ -45,14 +44,20 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 /* ══ HEADER ══ */
 .header{display:none;height:58px;background:var(--panel);border-bottom:2px solid var(--border);align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:200;flex-shrink:0;}
 .header.active{display:flex;}
-.logo{font-family:'Bebas Neue';font-size:26px;letter-spacing:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-logo{font-family:'Bebas Neue';font-size:24px;letter-spacing:3px;color:var(--text);}
+.header-logo span{color:var(--accent);}
 .header-right{display:flex;align-items:center;gap:8px;}
-.hdr-btn{padding:6px 14px;border-radius:8px;border:2px solid var(--border);background:var(--card);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px;}
-.hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
-.hdr-btn.danger:hover{border-color:var(--red);color:var(--red);}
 .sync-badge{font-size:11px;font-weight:700;color:var(--green);padding:4px 10px;border-radius:12px;background:rgba(61,207,130,.1);border:1px solid rgba(61,207,130,.3);}
 .user-email{font-size:11px;color:var(--muted);font-weight:600;}
-.proj-count{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1px;}
+.proj-count{font-size:11px;color:var(--muted);font-weight:700;}
+.hdr-btn{padding:6px 14px;border-radius:8px;border:2px solid var(--border);background:var(--card);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
+.hdr-btn.danger:hover{border-color:var(--red);color:var(--red);}
+/* Nav tabs */
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{padding:6px 16px;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px;}
+.nav-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(45,122,255,.1);}
+.nav-tab:hover{border-color:var(--accent);color:var(--accent);}
 
 /* ══ LAYOUT ══ */
 .app-body{display:none;flex:1;overflow:hidden;}
@@ -79,178 +84,298 @@ select option{background:var(--card);}
 .pills{display:flex;flex-wrap:wrap;gap:5px;}
 .pill{padding:5px 10px;border:2px solid var(--border);border-radius:16px;background:var(--card);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
 .pill:hover,.pill.active{border-color:var(--accent);color:var(--accent);}
-.pill.active{background:rgba(240,165,0,.12);}
+.pill.active{background:rgba(45,122,255,.12);}
 .type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
 .ttab{border:2px solid var(--border);border-radius:9px;background:var(--card);padding:8px 4px;text-align:center;cursor:pointer;transition:.2s;color:var(--muted);font-size:11px;font-weight:700;}
 .ttab .ico{font-size:17px;display:block;margin-bottom:3px;}
 .ttab:hover,.ttab.active{border-color:var(--accent);color:var(--accent);}
-.ttab.active{background:rgba(240,165,0,.12);}
+.ttab.active{background:rgba(45,122,255,.12);}
 .tog{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:5px;transition:.2s;}
-.tog.on{border-color:var(--accent);background:rgba(240,165,0,.07);}
+.tog.on{border-color:var(--accent);background:rgba(45,122,255,.07);}
 .tog label{font-size:12px;font-weight:600;cursor:pointer;pointer-events:none;}
 .sw{width:30px;height:16px;background:var(--border);border-radius:8px;position:relative;transition:.2s;flex-shrink:0;}
 .tog.on .sw{background:var(--accent);}
 .sw::after{content:'';width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:.2s;}
 .tog.on .sw::after{transform:translateX(14px);}
+/* price+source list */
+.price-src-list{display:flex;flex-direction:column;gap:10px;}
+.psi{}
+.psi-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;}
+.psi-row{margin-bottom:4px;}
+.psi-row input{width:100%;}
+.psi-src{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.sup-select{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--muted);font-family:'Inter';font-size:11px;font-weight:600;-webkit-appearance:none;width:100%;transition:.2s;}
+.sup-select:focus{outline:none;border-color:var(--accent);color:var(--text);}
+.sup-select option{background:var(--card);}
+.url-input{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--accent);font-family:'Inter';font-size:10px;font-weight:500;width:100%;transition:.2s;}
+.url-input:focus{outline:none;border-color:var(--accent);}
+.url-input::placeholder{color:rgba(107,115,158,.4);}
+
+/* tooltip on price cell */
+.price-cell{position:relative;text-align:right;cursor:default;}
+.price-cell .tip{
+  display:none;position:absolute;right:0;top:calc(100% + 6px);
+  background:#1a1a2e;color:#eef0fc;border:1px solid #2d7aff;
+  border-radius:8px;padding:10px 13px;font-size:11px;line-height:1.6;
+  white-space:nowrap;z-index:999;min-width:180px;text-align:left;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+}
+.price-cell .tip a{color:#2d7aff;text-decoration:underline;display:block;margin-top:4px;font-size:10px;word-break:break-all;white-space:normal;max-width:220px;}
+.price-cell:hover .tip{display:block;}
+.mat-cost-wrap{color:var(--green);font-size:12px;font-weight:700;white-space:nowrap;border-bottom:1px dashed rgba(61,207,130,.4);cursor:help;}
+
 .price-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .price-item label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:3px;}
-.calc-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:8px;}
-.calc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.28);}
+
+/* markup/works highlight */
+.highlight-field{background:rgba(240,165,0,.06);border:2px solid rgba(240,165,0,.3);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.highlight-field label{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.highlight-field input{background:rgba(240,165,0,.08);border-color:rgba(240,165,0,.3);}
+.highlight-field input:focus{border-color:var(--gold);}
+
+.calc-btn{width:100%;padding:12px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:8px;}
+.calc-btn:hover{background:var(--accent2);transform:translateY(-1px);}
 .calc-btn:disabled{opacity:.6;transform:none;cursor:not-allowed;}
 .waste-hint{font-size:10px;color:var(--muted);text-align:center;margin-top:5px;}
 
 /* ══ MAIN ══ */
 .main{overflow-y:auto;height:calc(100vh - 58px);padding:20px;}
-.empty{text-align:center;padding:90px 20px;color:var(--muted);}
+
+/* View tabs inside main */
+.view-tabs{display:flex;gap:8px;margin-bottom:20px;}
+.view-tab{padding:8px 20px;border-radius:8px;border:2px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;}
+.view-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(45,122,255,.1);}
+.view-tab:hover{border-color:var(--accent);color:var(--accent);}
+
+.empty{text-align:center;padding:80px 20px;color:var(--muted);}
 .empty .eico{font-size:56px;margin-bottom:14px;}
 .empty p{font-size:13px;line-height:1.8;}
+
+/* Project cards */
 .proj-list{display:flex;flex-direction:column;gap:14px;}
 .proj-card{background:var(--panel);border:2px solid var(--border);border-radius:14px;overflow:hidden;animation:fadeUp .3s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.proj-card-header{padding:12px 18px;display:flex;align-items:flex-start;justify-content:space-between;background:rgba(240,165,0,.07);border-bottom:1px solid var(--border);}
+.proj-card-header{padding:12px 18px;display:flex;align-items:flex-start;justify-content:space-between;background:rgba(45,122,255,.06);border-bottom:1px solid var(--border);}
 .proj-name{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;color:var(--accent);}
 .proj-meta{font-size:11px;color:var(--muted);margin-top:2px;}
 .proj-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:12px;}
-.proj-total{font-family:'Bebas Neue';font-size:22px;color:var(--green);letter-spacing:1px;}
-.print-btn{padding:6px 14px;border-radius:8px;border:2px solid rgba(240,165,0,.4);background:rgba(240,165,0,.08);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;}
-.print-btn:hover{border-color:var(--accent);background:rgba(240,165,0,.16);}
+.proj-total-wrap{text-align:right;}
+.proj-total{font-family:'Bebas Neue';font-size:20px;color:var(--green);letter-spacing:1px;display:block;}
+.proj-total-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.print-btn{padding:6px 14px;border-radius:8px;border:2px solid rgba(45,122,255,.4);background:rgba(45,122,255,.08);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;}
+.print-btn:hover{border-color:var(--accent);background:rgba(45,122,255,.16);}
 .proj-body{padding:14px 18px 18px;}
 .mtable{width:100%;border-collapse:collapse;font-size:12.5px;}
 .mtable th{text-align:left;padding:5px 5px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
-.mtable td{padding:7px 5px;border-bottom:1px solid rgba(44,49,85,.5);vertical-align:middle;}
+.mtable td{padding:7px 5px;border-bottom:1px solid rgba(37,42,64,.6);vertical-align:middle;}
 .mtable tr:last-child td{border-bottom:none;}
 .mat-name{font-weight:600;}
 .mat-qty{font-family:'Bebas Neue';font-size:16px;letter-spacing:.5px;color:var(--accent);}
 .mat-unit{color:var(--muted);font-size:10px;}
 .mat-cost{color:var(--green);font-size:12px;font-weight:700;text-align:right;white-space:nowrap;}
 .sec-row td{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding-top:11px;padding-bottom:2px;border-bottom:none;}
-.total-box{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:8px;padding:10px 13px;margin-top:10px;}
-.total-lbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.total-val{font-family:'Bebas Neue';font-size:24px;color:var(--green);letter-spacing:1px;}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
+.summary-box{background:var(--card);border-radius:8px;padding:10px 12px;border:1px solid var(--border);}
+.summary-box.highlight{border-color:rgba(61,207,130,.3);background:rgba(61,207,130,.05);}
+.summary-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+.summary-val{font-family:'Bebas Neue';font-size:20px;letter-spacing:.5px;margin-top:3px;}
+.summary-val.green{color:var(--green);}
+.summary-val.gold{color:var(--gold);}
+.summary-val.blue{color:var(--accent);}
 
-/* ══ ADMIN PANEL ══ */
-.admin-panel{background:rgba(240,165,0,.05);border:2px solid rgba(240,165,0,.2);border-radius:12px;padding:16px;margin-bottom:20px;}
-.admin-title{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+/* Admin */
+.admin-panel{background:rgba(45,122,255,.04);border:2px solid rgba(45,122,255,.2);border-radius:12px;padding:16px;margin-bottom:20px;}
+.admin-title{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;}
 .user-list{display:flex;flex-direction:column;gap:8px;}
 .user-item{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
 .user-info{font-size:13px;font-weight:600;}
 .user-info span{font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;}
-.user-actions{display:flex;gap:6px;}
-.approve-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--green);color:#000;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
-.reject-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.approve-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--green);color:#000;font-size:11px;font-weight:700;cursor:pointer;}
+.reject-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:700;cursor:pointer;margin-left:6px;}
 .approved-tag{font-size:10px;color:var(--green);font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(61,207,130,.1);border:1px solid rgba(61,207,130,.3);}
 
-/* ══ SETTINGS MODAL ══ */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;}
+/* Settings modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--panel);border:2px solid var(--border);border-radius:16px;padding:28px;width:480px;max-width:95vw;animation:fadeUp .25s ease;}
+.modal{background:var(--panel);border:2px solid var(--border);border-radius:16px;padding:28px;width:460px;max-width:95vw;animation:fadeUp .25s ease;}
 .modal-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:20px;}
 .modal-field{margin-bottom:14px;}
 .modal-field label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
-.btn-primary{padding:9px 22px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer;}
+.btn-primary{padding:9px 22px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;}
 .btn-ghost{padding:9px 18px;background:transparent;border:2px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:.2s;}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
 
-/* ══ PRINT ══ */
-.print-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 20px;}
+/* ══ PRICE TAB ══ */
+.price-tab-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+.price-tab-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--text);margin-bottom:4px;}
+.price-tab-sub{font-size:12px;color:var(--muted);}
+.interval-wrap{display:flex;align-items:center;gap:8px;}
+.interval-label{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.interval-select{background:var(--card);border:2px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-family:'Inter';font-size:12px;font-weight:700;-webkit-appearance:none;}
+.price-add-btn{padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;transition:.2s;white-space:nowrap;}
+.price-add-btn:hover{background:var(--accent2);}
+
+.price-category{margin-bottom:20px;}
+.price-cat-title{font-family:'Bebas Neue';font-size:15px;letter-spacing:2px;color:var(--accent);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.price-items{display:flex;flex-direction:column;gap:6px;}
+
+.price-item-card{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;transition:.2s;}
+.price-item-card:hover{border-color:rgba(45,122,255,.3);}
+.price-item-card.stale{border-color:rgba(240,165,0,.4);background:rgba(240,165,0,.03);}
+.price-item-card.overdue{border-color:rgba(224,85,85,.4);background:rgba(224,85,85,.03);}
+
+.pic-left{display:flex;flex-direction:column;gap:4px;}
+.pic-name{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+.pic-note{font-size:11px;color:var(--muted);}
+.pic-supplier{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.pic-supplier a{color:var(--accent);text-decoration:none;font-weight:600;}
+.pic-supplier a:hover{text-decoration:underline;}
+.pic-updated{font-size:10px;margin-top:2px;}
+
+.pic-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.pic-price{font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;color:var(--green);}
+.pic-unit{font-size:10px;color:var(--muted);margin-left:3px;}
+.pic-actions{display:flex;gap:6px;}
+.pic-update-btn{padding:5px 12px;border-radius:6px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.pic-update-btn:hover{background:var(--accent);color:#fff;}
+.pic-edit-btn{padding:5px 10px;border-radius:6px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;transition:.2s;}
+.pic-edit-btn:hover{border-color:var(--accent);color:var(--accent);}
+.pic-del-btn{padding:5px 10px;border-radius:6px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;transition:.2s;}
+.pic-del-btn:hover{border-color:var(--red);color:var(--red);}
+
+.freshness-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.freshness-dot.fresh{background:var(--green);}
+.freshness-dot.stale{background:var(--gold);}
+.freshness-dot.overdue{background:var(--red);}
+.freshness-text.fresh{color:var(--green);}
+.freshness-text.stale{color:var(--gold);}
+.freshness-text.overdue{color:var(--red);}
+
+/* Update price inline */
+.pic-update-form{display:none;align-items:center;gap:6px;margin-top:4px;}
+.pic-update-form.show{display:flex;}
+.pic-update-input{background:var(--card);border:2px solid var(--accent);border-radius:6px;padding:5px 10px;color:var(--text);font-family:'Inter';font-size:13px;font-weight:700;width:100px;}
+.pic-confirm-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--green);color:#000;font-size:11px;font-weight:700;cursor:pointer;}
+
+.price-empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.price-empty .eico{font-size:48px;margin-bottom:12px;}
+
+/* Price history tooltip */
+.pic-history{font-size:10px;color:var(--muted);margin-top:2px;}
+.print-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:2000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 20px;}
 .print-overlay.open{display:flex;}
-.print-wrap{background:#fff;width:794px;max-width:100%;min-height:400px;border-radius:4px;padding:48px 52px;color:#1a1a2e;font-family:'Inter',sans-serif;position:relative;}
+.print-wrap{background:#fff;width:794px;max-width:100%;min-height:400px;border-radius:4px;padding:44px 48px;color:#1a1a2e;font-family:'Inter',sans-serif;}
 .print-close{position:fixed;top:16px;right:24px;padding:8px 18px;background:var(--red);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;z-index:2100;}
-.print-print-btn{position:fixed;top:16px;right:120px;padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer;z-index:2100;}
-.est-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:18px;border-bottom:3px solid #1a1a2e;}
-.est-company-name{font-family:'Bebas Neue';font-size:28px;letter-spacing:3px;color:#1a1a2e;}
-.est-company-sub{font-size:12px;color:#666;margin-top:4px;}
-.est-meta{text-align:right;}
-.est-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;}
-.est-number{font-family:'Bebas Neue';font-size:26px;color:#e05520;letter-spacing:2px;}
-.est-date{font-size:12px;color:#444;}
-.est-client-block{background:#f5f5f5;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;gap:40px;}
-.ecf-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.print-btn2{position:fixed;top:16px;right:130px;padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;z-index:2100;}
+
+/* Estimate layout */
+.est-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #1a1a2e;}
+.est-brand{font-family:'Bebas Neue';font-size:32px;letter-spacing:4px;color:#1a1a2e;line-height:1;}
+.est-brand span{color:#2d7aff;}
+.est-brand-sub{font-size:11px;color:#888;margin-top:3px;letter-spacing:1px;}
+.est-meta-block{text-align:right;}
+.est-meta-label{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;}
+.est-num{font-family:'Bebas Neue';font-size:24px;color:#e05520;letter-spacing:2px;}
+.est-date{font-size:11px;color:#555;}
+
+.est-client{background:#f5f7fa;border-radius:8px;padding:12px 16px;margin-bottom:18px;display:flex;gap:40px;}
+.ecf-label{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
 .ecf-val{font-size:14px;font-weight:700;color:#1a1a2e;}
-.est-obj-block{margin-bottom:18px;}
-.est-obj-title{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
-.est-obj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.est-obj-item{background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:7px 10px;}
-.oi-label{font-size:9px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
-.oi-val{font-size:13px;font-weight:700;color:#1a1a2e;margin-top:2px;}
-.est-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px;}
-.est-table th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.est-table th:last-child{text-align:right;}
-.est-table td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:middle;}
+
+.est-params{margin-bottom:16px;}
+.est-params-title{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.est-params-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.est-param-item{background:#f9fafc;border:1px solid #e8eaf0;border-radius:6px;padding:7px 10px;}
+.epi-label{font-size:8px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.epi-val{font-size:12px;font-weight:700;color:#1a1a2e;margin-top:2px;}
+
+/* Client estimate table - NO PRICES */
+.est-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.est-table th{background:#1a1a2e;color:#fff;padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.est-table td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:middle;}
 .est-table tr:last-child td{border-bottom:none;}
-.est-sec-row td{background:#f0f0f0;font-size:9px;font-weight:700;letter-spacing:1.5px;color:#666;text-transform:uppercase;padding:5px 10px;border-bottom:none;}
+.est-sec-row td{background:#f0f2f7;font-size:8px;font-weight:700;letter-spacing:1.5px;color:#777;text-transform:uppercase;padding:5px 10px;border-bottom:none;}
 .est-qty{font-weight:700;color:#1a1a2e;}
-.est-unit{color:#999;font-size:11px;}
-.est-cost{font-weight:700;color:#1a1a2e;text-align:right;}
-.est-total-row{display:flex;justify-content:flex-end;margin-top:8px;}
-.est-total-box{background:#1a1a2e;color:#fff;padding:14px 24px;border-radius:8px;display:flex;align-items:center;gap:24px;}
-.est-total-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7;}
-.est-total-val{font-family:'Bebas Neue';font-size:28px;letter-spacing:1px;color:#f0a500;}
-.est-note{margin-top:20px;padding:10px 14px;background:#fff8e6;border-left:4px solid #f0a500;font-size:11px;color:#666;line-height:1.6;}
-.est-sign{margin-top:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
-.sign-label{font-size:10px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:22px;}
-.sign-line{border-top:1px solid #ccc;padding-top:4px;font-size:10px;color:#bbb;}
-.est-footer{margin-top:28px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:11px;color:#999;}
+.est-unit{color:#aaa;font-size:10px;}
+
+/* Works & totals block */
+.est-financials{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.est-fin-row{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-radius:6px;background:#f5f7fa;}
+.est-fin-label{font-size:11px;color:#666;font-weight:600;}
+.est-fin-val{font-size:13px;font-weight:700;color:#1a1a2e;}
+.est-fin-row.total-row{background:#1a1a2e;padding:12px 16px;}
+.est-fin-row.total-row .est-fin-label{color:rgba(255,255,255,.7);font-size:12px;letter-spacing:.5px;}
+.est-fin-row.total-row .est-fin-val{font-family:'Bebas Neue';font-size:26px;color:#f0a500;letter-spacing:1px;}
+
+.est-note{margin-top:16px;padding:10px 14px;background:#fff8e6;border-left:4px solid #f0a500;font-size:10px;color:#666;line-height:1.6;}
+.est-sign{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+.sign-label{font-size:9px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+.sign-line{border-top:1px solid #ddd;padding-top:4px;font-size:9px;color:#ccc;}
+.est-footer{margin-top:24px;padding-top:12px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#aaa;}
 
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
 @media print{
   body>*:not(.print-overlay){display:none!important;}
   .print-overlay{position:static!important;display:block!important;background:none!important;padding:0!important;}
-  .print-close,.print-print-btn{display:none!important;}
-  .print-wrap{box-shadow:none!important;border-radius:0!important;padding:18mm 16mm!important;}
+  .print-close,.print-btn2{display:none!important;}
+  .print-wrap{padding:16mm 14mm!important;border-radius:0!important;}
   @page{margin:0;size:A4;}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ LOGIN SCREEN ══ -->
+<!-- ══ LOGIN ══ -->
 <div class="auth-screen active" id="loginScreen">
-  <div class="auth-logo">КаркасПро</div>
-  <div class="auth-sub">Каркасное строительство</div>
+  <div class="auth-logo">tmn <span>Frame</span></div>
+  <div class="auth-sub">Расчёт материалов · Тюмень</div>
   <div class="auth-box">
-    <div class="auth-title">Вход в систему</div>
+    <div class="auth-title">Вход</div>
     <div class="auth-error" id="loginError"></div>
     <div class="auth-field"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
-    <div class="auth-field"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+    <div class="auth-field"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="auth-btn" onclick="doLogin()">ВОЙТИ</button>
     <div class="auth-switch">Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></div>
   </div>
 </div>
 
-<!-- ══ REGISTER SCREEN ══ -->
+<!-- ══ REGISTER ══ -->
 <div class="auth-screen" id="registerScreen">
-  <div class="auth-logo">КаркасПро</div>
-  <div class="auth-sub">Каркасное строительство</div>
+  <div class="auth-logo">tmn <span>Frame</span></div>
+  <div class="auth-sub">Расчёт материалов · Тюмень</div>
   <div class="auth-box">
     <div class="auth-title">Регистрация</div>
     <div class="auth-error" id="regError"></div>
+    <div class="auth-field"><label>Имя</label><input type="text" id="regName" placeholder="Иван Иванов"></div>
     <div class="auth-field"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
     <div class="auth-field"><label>Пароль (мин. 6 символов)</label><input type="password" id="regPass" placeholder="••••••••"></div>
-    <div class="auth-field"><label>Ваше имя</label><input type="text" id="regName" placeholder="Иван Иванов"></div>
     <button class="auth-btn" onclick="doRegister()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
     <div class="auth-switch">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
   </div>
 </div>
 
-<!-- ══ PENDING SCREEN ══ -->
+<!-- ══ PENDING ══ -->
 <div class="pending-screen" id="pendingScreen">
   <div class="pending-icon">⏳</div>
   <div class="pending-title">Ожидание подтверждения</div>
-  <div class="pending-text">Ваш аккаунт зарегистрирован.<br>Администратор должен одобрить доступ.<br>Обычно это занимает несколько минут.</div>
+  <div class="pending-text">Аккаунт зарегистрирован. Администратор должен одобрить доступ.</div>
   <button class="pending-logout" onclick="doLogout()">Выйти</button>
 </div>
 
 <!-- ══ HEADER ══ -->
 <div class="header" id="appHeader">
-  <div class="logo">КаркасПро</div>
+  <div class="header-logo">tmn <span>Frame</span></div>
   <div class="header-right">
-    <span class="proj-count" id="projCount"></span>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tabCalc" onclick="switchTab('calc')">⚡ Расчёт</button>
+      <button class="nav-tab" id="tabProjects" onclick="switchTab('projects')">📁 Проекты</button>
+      <button class="nav-tab" id="tabPrice" onclick="switchTab('price')">💰 Прайс</button>
+    </div>
     <span class="sync-badge">🟢 ОНЛАЙН</span>
     <span class="user-email" id="userEmailBadge"></span>
-    <button class="hdr-btn" onclick="openSettings()">⚙ Реквизиты</button>
+    <button class="hdr-btn" onclick="openSettings()">⚙</button>
     <button class="hdr-btn danger" onclick="doLogout()">Выйти</button>
   </div>
 </div>
@@ -259,7 +384,7 @@ select option{background:var(--card);}
 <div class="app-body" id="appBody">
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebarEl">
   <div class="sb-title" style="margin-top:2px;">Проект</div>
   <div class="proj-bar">
     <select id="projSelect" class="proj-select" onchange="loadProject()">
@@ -272,13 +397,15 @@ select option{background:var(--card);}
     <span class="flabel">Название / клиент</span>
     <input type="text" id="projName" placeholder="Иванов · Хозблок 6×4">
   </div>
+
   <div class="sep"></div>
   <div class="sb-title">Тип постройки</div>
   <div class="type-grid">
-    <div class="ttab active" id="tb-house" onclick="setType('house',this)"><span class="ico">🏠</span>Жилой дом</div>
-    <div class="ttab" id="tb-shed"  onclick="setType('shed',this)"><span class="ico">🛖</span>Хозблок</div>
+    <div class="ttab active" id="tb-house" onclick="setType('house',this)"><span class="ico">🏠</span>Дом</div>
+    <div class="ttab" id="tb-shed" onclick="setType('shed',this)"><span class="ico">🛖</span>Хозблок</div>
     <div class="ttab" id="tb-banya" onclick="setType('banya',this)"><span class="ico">♨️</span>Баня</div>
   </div>
+
   <div class="sb-title">Размеры</div>
   <div class="field">
     <span class="flabel">Длина × Ширина (м)</span>
@@ -295,6 +422,7 @@ select option{background:var(--card);}
       <div class="pill" onclick="setFloors(3,this)">3 этажа</div>
     </div>
   </div>
+
   <div class="sep"></div>
   <div class="sb-title">Каркас</div>
   <div class="field"><span class="flabel">Шаг стоек</span>
@@ -306,11 +434,12 @@ select option{background:var(--card);}
   </div>
   <div class="field"><span class="flabel">Сечение стоек</span>
     <div class="pills">
-      <div class="pill active" onclick="setSection('150x50',this)">150×50</div>
       <div class="pill" onclick="setSection('100x50',this)">100×50</div>
+      <div class="pill active" onclick="setSection('150x50',this)">150×50</div>
       <div class="pill" onclick="setSection('200x50',this)">200×50</div>
     </div>
   </div>
+
   <div class="sep"></div>
   <div class="sb-title">Кровля</div>
   <div class="field"><span class="flabel">Тип крыши</span>
@@ -325,17 +454,20 @@ select option{background:var(--card);}
   <div class="field"><span class="flabel">Кровельный материал</span>
     <select id="fRoofMat">
       <option value="Металлопрофиль">Металлопрофиль</option>
+      <option value="Профлист">Профлист</option>
       <option value="Ондулин">Ондулин</option>
-      <option value="Поликарбонат">Поликарбонат</option>
       <option value="Мягкая черепица">Мягкая черепица</option>
     </select>
   </div>
+
   <div class="sep"></div>
   <div class="sb-title">Элементы</div>
-  <div class="tog on"  id="tog-osb" onclick="tog(this)"><label>Обшивка OSB (1250×2500)</label><div class="sw"></div></div>
-  <div class="tog on"  id="tog-ins" onclick="tog(this)"><label>Утеплитель (минвата)</label><div class="sw"></div></div>
-  <div class="tog on"  id="tog-vap" onclick="tog(this)"><label>Пароизоляция / ветрозащита</label><div class="sw"></div></div>
-  <div class="tog"     id="tog-flo" onclick="tog(this)"><label>Пол (лаги + половая доска)</label><div class="sw"></div></div>
+  <div class="tog on" id="tog-osb" onclick="tog(this)"><label>Обшивка OSB-3 (1250×2500)</label><div class="sw"></div></div>
+  <div class="tog on" id="tog-ins" onclick="tog(this)"><label>Утеплитель (минвата 100мм)</label><div class="sw"></div></div>
+  <div class="tog on" id="tog-vap" onclick="tog(this)"><label>Пароизоляция + ветрозащита</label><div class="sw"></div></div>
+  <div class="tog on" id="tog-resh" onclick="tog(this)"><label>Обрешётка + вентзазор</label><div class="sw"></div></div>
+  <div class="tog" id="tog-flo" onclick="tog(this)"><label>Пол (лаги + OSB настил)</label><div class="sw"></div></div>
+
   <div class="sep"></div>
   <div class="sb-title">Фундамент</div>
   <div class="field"><span class="flabel">Тип</span>
@@ -346,7 +478,7 @@ select option{background:var(--card);}
     </div>
   </div>
   <div id="fnd-options">
-    <div class="field"><span class="flabel">Шаг свай / столбов (м)</span>
+    <div class="field"><span class="flabel">Шаг свай (м)</span>
       <div class="pills">
         <div class="pill active" onclick="setPileStep(1.5,this)">1.5 м</div>
         <div class="pill" onclick="setPileStep(2,this)">2.0 м</div>
@@ -354,44 +486,166 @@ select option{background:var(--card);}
       </div>
     </div>
     <div class="field"><span class="flabel">Диаметр сваи</span>
-      <select id="fPileDia"><option value="89">89 мм</option><option value="108" selected>108 мм</option><option value="133">133 мм</option></select>
+      <select id="fPileDia">
+        <option value="89">89 мм</option>
+        <option value="108" selected>108 мм</option>
+        <option value="133">133 мм</option>
+      </select>
     </div>
   </div>
+
   <div class="sep"></div>
-  <div class="sb-title">Цены (₽ за ед.)</div>
-  <div class="price-grid">
-    <div class="price-item"><label>Брус (м³)</label><input type="number" id="p-brus" value="12000"></div>
-    <div class="price-item"><label>OSB (лист)</label><input type="number" id="p-osb" value="900"></div>
-    <div class="price-item"><label>Минвата (м³)</label><input type="number" id="p-ins" value="2800"></div>
-    <div class="price-item"><label>Кровля (м²)</label><input type="number" id="p-roof" value="500"></div>
-    <div class="price-item"><label>Пароиз. (м²)</label><input type="number" id="p-vap" value="35"></div>
-    <div class="price-item"><label>Доска пола (м²)</label><input type="number" id="p-flo" value="850"></div>
-    <div class="price-item"><label>Свая / столб</label><input type="number" id="p-pile" value="2200"></div>
-    <div class="price-item"><label>Крепёж (%)</label><input type="number" id="p-fix" value="8"></div>
+  <div class="sb-title">Цены закупки (₽/ед.) — Тюмень</div>
+  <div class="price-src-list">
+    <div class="psi"><div class="psi-label">Брус 100×50 (₽/м³)</div>
+      <div class="psi-row"><input type="number" id="p-brus" value="18000"></div>
+      <div class="psi-src"><select id="src-brus" class="sup-select"><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>Лесозавод Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-brus" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">OSB-3 (₽/лист)</div>
+      <div class="psi-row"><input type="number" id="p-osb" value="1100"></div>
+      <div class="psi-src"><select id="src-osb" class="sup-select"><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-osb" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Минвата (₽/м³)</div>
+      <div class="psi-row"><input type="number" id="p-ins" value="3200"></div>
+      <div class="psi-src"><select id="src-ins" class="sup-select"><option>ОБИ Тюмень</option><option>Леруа Мерлен Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-ins" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Кровля (₽/м²)</div>
+      <div class="psi-row"><input type="number" id="p-roof" value="600"></div>
+      <div class="psi-src"><select id="src-roof" class="sup-select"><option>Кровля72.рф</option><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>Другой</option></select><input type="url" id="url-roof" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Пароизоляция (₽/м²)</div>
+      <div class="psi-row"><input type="number" id="p-vap" value="40"></div>
+      <div class="psi-src"><select id="src-vap" class="sup-select"><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-vap" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Обрешётка (₽/пм)</div>
+      <div class="psi-row"><input type="number" id="p-resh" value="45"></div>
+      <div class="psi-src"><select id="src-resh" class="sup-select"><option>Лесозавод Тюмень</option><option>Леруа Мерлен Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-resh" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">OSB пол (₽/лист)</div>
+      <div class="psi-row"><input type="number" id="p-flosb" value="1100"></div>
+      <div class="psi-src"><select id="src-flosb" class="sup-select"><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>СтройАрсенал72</option><option>Другой</option></select><input type="url" id="url-flosb" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Свая/столб (₽/шт)</div>
+      <div class="psi-row"><input type="number" id="p-pile" value="2800"></div>
+      <div class="psi-src"><select id="src-pile" class="sup-select"><option>СваяТюмень72.рф</option><option>Леруа Мерлен Тюмень</option><option>Другой</option></select><input type="url" id="url-pile" class="url-input" placeholder="https://..."></div></div>
+    <div class="psi"><div class="psi-label">Крепёж (% от бруса)</div>
+      <div class="psi-row"><input type="number" id="p-fix" value="8" min="0" max="30"></div>
+      <div class="psi-src"><select id="src-fix" class="sup-select"><option>Крепёж72</option><option>Леруа Мерлен Тюмень</option><option>ОБИ Тюмень</option><option>Другой</option></select><input type="url" id="url-fix" class="url-input" placeholder="https://..."></div></div>
   </div>
+
+  <div class="sep"></div>
+
+  <!-- MARKUP -->
+  <div class="highlight-field">
+    <label>💰 Наценка (₽ фиксированно)</label>
+    <input type="number" id="p-markup" value="0" min="0" placeholder="0">
+  </div>
+
+  <!-- WORKS -->
+  <div class="highlight-field">
+    <label>🔨 Стоимость работ (₽ итого)</label>
+    <input type="number" id="p-works" value="0" min="0" placeholder="0">
+  </div>
+
   <div class="sep"></div>
   <button class="calc-btn" id="calcBtn" onclick="saveProject()">⚡ РАССЧИТАТЬ И СОХРАНИТЬ</button>
   <div class="waste-hint">+10 % запас на отходы учтён автоматически</div>
 </div>
 
 <!-- MAIN -->
-<div class="main">
+<div class="main" id="mainContent">
   <div id="adminArea"></div>
-  <div class="empty" id="emptyBox">
-    <div class="eico">📐</div>
-    <p>Введите название проекта, задайте параметры<br>и нажмите <strong style="color:var(--accent)">«Рассчитать и сохранить»</strong></p>
+
+  <!-- Calc tab -->
+  <div id="calcView">
+    <div class="empty" id="emptyBox">
+      <div class="eico">📐</div>
+      <p>Введите название проекта, задайте параметры<br>и нажмите <strong style="color:var(--accent)">«Рассчитать и сохранить»</strong></p>
+    </div>
+    <div id="currentProjectView" style="display:none"></div>
   </div>
-  <div id="resultsBox" style="display:none"><div class="proj-list" id="projList"></div></div>
+
+  <!-- Projects tab -->
+  <div id="projectsView" style="display:none">
+    <div class="empty" id="projEmpty">
+      <div class="eico">📁</div>
+      <p>Сохранённые проекты появятся здесь</p>
+    </div>
+    <div class="proj-list" id="projList"></div>
+  </div>
+
+  <!-- Price tab -->
+  <div id="priceView" style="display:none">
+    <div class="price-tab-header">
+      <div>
+        <div class="price-tab-title">💰 Прайс материалов</div>
+        <div class="price-tab-sub">Общая таблица цен — синхронизируется для обоих пользователей в реальном времени</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="interval-wrap">
+          <label class="interval-label">Проверять каждые</label>
+          <select id="checkInterval" class="interval-select" onchange="saveInterval()">
+            <option value="3">3 дня</option>
+            <option value="7" selected>7 дней</option>
+            <option value="14">14 дней</option>
+            <option value="30">30 дней</option>
+          </select>
+        </div>
+        <button class="price-add-btn" onclick="openAddMaterial()">+ Добавить материал</button>
+      </div>
+    </div>
+    <div id="priceTableWrap"></div>
+  </div>
 </div>
 
 </div><!-- /app-body -->
 
-<!-- SETTINGS MODAL -->
+<!-- ADD/EDIT MATERIAL MODAL -->
+<div class="modal-overlay" id="materialModal">
+  <div class="modal" style="width:520px;">
+    <div class="modal-title" id="matModalTitle">+ Добавить материал</div>
+    <input type="hidden" id="matEditId">
+    <div class="two" style="gap:12px;margin-bottom:12px;">
+      <div class="modal-field" style="margin:0"><label>Название материала</label><input type="text" id="mat-name" placeholder="Брус 150×50 мм"></div>
+      <div class="modal-field" style="margin:0"><label>Единица измерения</label>
+        <select id="mat-unit"><option>м³</option><option>лист</option><option>м²</option><option>пм</option><option>шт</option><option>%</option></select>
+      </div>
+    </div>
+    <div class="two" style="gap:12px;margin-bottom:12px;">
+      <div class="modal-field" style="margin:0"><label>Текущая цена (₽)</label><input type="number" id="mat-price" placeholder="0" min="0"></div>
+      <div class="modal-field" style="margin:0"><label>Поставщик</label>
+        <select id="mat-supplier">
+          <option>Леруа Мерлен Тюмень</option>
+          <option>ОБИ Тюмень</option>
+          <option>Лесозавод Тюмень</option>
+          <option>Кровля72.рф</option>
+          <option>СваяТюмень72.рф</option>
+          <option>СтройАрсенал72</option>
+          <option>Крепёж72</option>
+          <option>Другой</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field"><label>Ссылка на товар</label><input type="url" id="mat-url" placeholder="https://leroymerlin.ru/product/..."></div>
+    <div class="modal-field"><label>Категория</label>
+      <select id="mat-category">
+        <option>Каркас</option>
+        <option>Кровля</option>
+        <option>Обшивка</option>
+        <option>Утеплитель</option>
+        <option>Плёнки</option>
+        <option>Обрешётка</option>
+        <option>Пол</option>
+        <option>Фундамент</option>
+        <option>Крепёж</option>
+        <option>Прочее</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Комментарий (необязательно)</label><input type="text" id="mat-note" placeholder="Толщина, марка, артикул..."></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeMaterialModal()">Отмена</button>
+      <button class="btn-primary" onclick="saveMaterial()">Сохранить</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="settingsModal">
   <div class="modal">
-    <div class="modal-title">⚙ Реквизиты компании</div>
-    <div class="modal-field"><label>Название компании</label><input type="text" id="s-company" placeholder="ООО КаркасСтрой"></div>
-    <div class="modal-field"><label>Имя прораба</label><input type="text" id="s-foreman" placeholder="Иван Иванов"></div>
+    <div class="modal-title">⚙ Реквизиты</div>
+    <div class="modal-field"><label>Название компании</label><input type="text" id="s-company" value="tmn Frame"></div>
+    <div class="modal-field"><label>Имя прораба (для подписи)</label><input type="text" id="s-foreman" placeholder="Иван Иванов"></div>
     <div class="modal-actions">
       <button class="btn-ghost" onclick="closeSettings()">Отмена</button>
       <button class="btn-primary" onclick="saveSettings()">Сохранить</button>
@@ -402,16 +656,16 @@ select option{background:var(--card);}
 <!-- PRINT OVERLAY -->
 <div class="print-overlay" id="printOverlay">
   <button class="print-close" onclick="closePrint()">✕ Закрыть</button>
-  <button class="print-print-btn" onclick="window.print()">🖨 Печать / PDF</button>
+  <button class="print-btn2" onclick="window.print()">🖨 Печать / PDF</button>
   <div class="print-wrap" id="printContent"></div>
 </div>
 
-<!-- ══ FIREBASE + APP SCRIPT ══ -->
+<!-- ══ FIREBASE + SCRIPT ══ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, updateDoc }
+import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, updateDoc, getDocs }
   from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -426,220 +680,170 @@ const firebaseConfig = {
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
-
 const WASTE = 1.10;
-// First registered user becomes admin
-const ADMIN_EMAIL = null; // will be auto-detected
 
 let buildType='house', roofType='shed', fndType='screw';
 let floors=1, section='150x50', pileStep=1.5;
-let allProjects={}, currentUser=null, currentUserData=null;
-let unsubProjects=null, unsubUsers=null;
+let allProjects={}, allPrices={}, currentUser=null, currentUserData=null;
+let unsubProjects=null, unsubUsers=null, unsubPrice=null;
+let activeTab = 'calc';
 
 // ── SCREENS ──
-function showScreen(name){
-  document.getElementById('loginScreen').classList.toggle('active', name==='login');
-  document.getElementById('registerScreen').classList.toggle('active', name==='register');
-  document.getElementById('pendingScreen').classList.toggle('active', name==='pending');
-  document.getElementById('appHeader').classList.toggle('active', name==='app');
-  document.getElementById('appBody').classList.toggle('active', name==='app');
+function showScreen(s){
+  document.getElementById('loginScreen').classList.toggle('active',s==='login');
+  document.getElementById('registerScreen').classList.toggle('active',s==='register');
+  document.getElementById('pendingScreen').classList.toggle('active',s==='pending');
+  document.getElementById('appHeader').classList.toggle('active',s==='app');
+  document.getElementById('appBody').classList.toggle('active',s==='app');
 }
 
 // ── AUTH STATE ──
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async user => {
   if(!user){ showScreen('login'); stopListeners(); return; }
   currentUser = user;
   document.getElementById('userEmailBadge').textContent = user.email;
-
-  // Get or create user doc
-  const uRef = doc(db, 'users', user.uid);
+  const uRef = doc(db,'users',user.uid);
   let uSnap = await getDoc(uRef);
   if(!uSnap.exists()){
-    // First user ever = auto-admin
-    const allUsersSnap = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js")
-      .then(m => m.getDocs(m.collection(db,'users')));
-    const isFirst = allUsersSnap.empty;
-    await setDoc(uRef, {
-      email: user.email,
-      name: user.displayName || user.email.split('@')[0],
-      approved: isFirst,
-      admin: isFirst,
-      createdAt: new Date().toISOString()
-    });
+    const allSnap = await getDocs(collection(db,'users'));
+    const isFirst = allSnap.empty;
+    await setDoc(uRef,{email:user.email,name:user.displayName||user.email.split('@')[0],approved:isFirst,admin:isFirst,createdAt:new Date().toISOString()});
     uSnap = await getDoc(uRef);
   }
   currentUserData = uSnap.data();
-
   if(!currentUserData.approved){
     showScreen('pending');
-    // Listen for approval
-    onSnapshot(uRef, snap => {
-      if(snap.data()?.approved){ location.reload(); }
-    });
+    onSnapshot(uRef, snap=>{ if(snap.data()?.approved) location.reload(); });
     return;
   }
-
   showScreen('app');
   startListeners();
   loadSettingsIntoForm();
 });
 
 function stopListeners(){
-  if(unsubProjects){ unsubProjects(); unsubProjects=null; }
-  if(unsubUsers){ unsubUsers(); unsubUsers=null; }
+  if(unsubProjects){unsubProjects();unsubProjects=null;}
+  if(unsubUsers){unsubUsers();unsubUsers=null;}
+  if(unsubPrice){unsubPrice();unsubPrice=null;}
 }
 
 function startListeners(){
-  // Projects realtime
-  unsubProjects = onSnapshot(collection(db,'projects'), snap => {
+  unsubProjects = onSnapshot(collection(db,'projects'), snap=>{
     allProjects={};
-    snap.forEach(d=>{ allProjects[d.id]=d.data(); });
+    snap.forEach(d=>{allProjects[d.id]=d.data();});
     refreshSelect();
-    renderAll();
+    renderProjectsTab();
+    if(document.getElementById('projSelect').value) renderCurrentProject(document.getElementById('projSelect').value);
   });
-
-  // Users (for admin panel)
+  // Price list realtime
+  unsubPrice = onSnapshot(collection(db,'pricelist'), snap=>{
+    allPrices={};
+    snap.forEach(d=>{allPrices[d.id]=d.data();});
+    if(activeTab==='price') renderPriceTab();
+    syncSidebarPrices();
+  });
   if(currentUserData?.admin){
-    unsubUsers = onSnapshot(collection(db,'users'), snap => {
+    unsubUsers = onSnapshot(collection(db,'users'), snap=>{
       renderAdminPanel(snap.docs.map(d=>({id:d.id,...d.data()})));
     });
   }
 }
 
-// ── AUTH ACTIONS ──
+// ── TABS ──
+window.switchTab = function(tab){
+  activeTab = tab;
+  ['calc','projects','price'].forEach(t=>{
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1))?.classList.toggle('active',t===tab);
+  });
+  document.getElementById('calcView').style.display = tab==='calc'?'block':'none';
+  document.getElementById('projectsView').style.display = tab==='projects'?'block':'none';
+  document.getElementById('priceView').style.display = tab==='price'?'block':'none';
+  document.getElementById('sidebarEl').style.display = tab==='calc'?'block':'none';
+  if(tab==='projects') renderProjectsTab();
+  if(tab==='price') renderPriceTab();
+};
+
+// ── AUTH ──
 window.doLogin = async function(){
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPass').value;
-  const err   = document.getElementById('loginError');
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginError');
   err.classList.remove('show');
-  try{
-    await signInWithEmailAndPassword(auth, email, pass);
-  } catch(e){
-    err.textContent = e.code==='auth/invalid-credential' ? 'Неверный email или пароль' : e.message;
-    err.classList.add('show');
+  try{ await signInWithEmailAndPassword(auth,email,pass); }
+  catch(e){
+    const m={'auth/invalid-credential':'Неверный email или пароль','auth/user-not-found':'Пользователь не найден'};
+    err.textContent=m[e.code]||e.message; err.classList.add('show');
   }
 };
-
 window.doRegister = async function(){
-  const email = document.getElementById('regEmail').value.trim();
-  const pass  = document.getElementById('regPass').value;
-  const name  = document.getElementById('regName').value.trim();
-  const err   = document.getElementById('regError');
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const err=document.getElementById('regError');
   err.classList.remove('show');
-  if(!name){ err.textContent='Введите ваше имя'; err.classList.add('show'); return; }
+  if(!name){err.textContent='Введите имя';err.classList.add('show');return;}
   try{
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    // Save extra info — auth state will handle the rest
-    await setDoc(doc(db,'users',cred.user.uid),{
-      email, name, approved:false, admin:false,
-      createdAt: new Date().toISOString()
-    });
-  } catch(e){
-    const msgs = {
-      'auth/email-already-in-use':'Этот email уже зарегистрирован',
-      'auth/weak-password':'Пароль слишком короткий (минимум 6 символов)',
-      'auth/invalid-email':'Некорректный email'
-    };
-    err.textContent = msgs[e.code]||e.message;
-    err.classList.add('show');
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const allSnap=await getDocs(collection(db,'users'));
+    const isFirst=allSnap.empty;
+    await setDoc(doc(db,'users',cred.user.uid),{email,name,approved:isFirst,admin:isFirst,createdAt:new Date().toISOString()});
+  }catch(e){
+    const m={'auth/email-already-in-use':'Email уже используется','auth/weak-password':'Пароль слишком короткий','auth/invalid-email':'Некорректный email'};
+    err.textContent=m[e.code]||e.message; err.classList.add('show');
   }
 };
+window.doLogout=async()=>{stopListeners();await signOut(auth);};
+window.showLogin=()=>showScreen('login');
+window.showRegister=()=>showScreen('register');
 
-window.doLogout = async function(){
-  stopListeners();
-  await signOut(auth);
-};
-
-window.showLogin    = ()=>showScreen('login');
-window.showRegister = ()=>showScreen('register');
-
-// ── ADMIN PANEL ──
+// ── ADMIN ──
 function renderAdminPanel(users){
-  const area = document.getElementById('adminArea');
-  const pending = users.filter(u=>!u.approved);
-  const approved = users.filter(u=>u.approved && u.id!==currentUser?.uid);
-
-  if(!users.length){ area.innerHTML=''; return; }
-
-  let html=`<div class="admin-panel">
-    <div class="admin-title">👑 ПАНЕЛЬ АДМИНИСТРАТОРА
-      <span style="font-size:11px;color:var(--muted);font-weight:400;font-family:'Inter';">Пользователей: ${users.length}</span>
-    </div>
-    <div class="user-list">`;
-
-  if(pending.length){
-    html+=`<div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Ожидают одобрения (${pending.length})</div>`;
-    pending.forEach(u=>{
-      html+=`<div class="user-item">
-        <div class="user-info">${u.name||u.email}<span>${u.email} · ${new Date(u.createdAt).toLocaleDateString('ru')}</span></div>
-        <div class="user-actions">
-          <button class="approve-btn" onclick="approveUser('${u.id}')">✓ Одобрить</button>
-          <button class="reject-btn" onclick="rejectUser('${u.id}')">✕ Отклонить</button>
-        </div>
-      </div>`;
-    });
-  }
-
-  if(approved.length){
-    html+=`<div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px;">Одобренные</div>`;
-    approved.forEach(u=>{
-      html+=`<div class="user-item">
-        <div class="user-info">${u.name||u.email}<span>${u.email}</span></div>
-        <span class="approved-tag">✓ Одобрен</span>
-      </div>`;
-    });
-  }
-
+  const area=document.getElementById('adminArea');
+  const pending=users.filter(u=>!u.approved);
+  if(!pending.length){area.innerHTML='';return;}
+  let html=`<div class="admin-panel"><div class="admin-title">👑 Новые пользователи (${pending.length})</div><div class="user-list">`;
+  pending.forEach(u=>{
+    html+=`<div class="user-item">
+      <div class="user-info">${u.name||u.email}<span>${u.email}</span></div>
+      <div><button class="approve-btn" onclick="approveUser('${u.id}')">✓ Одобрить</button><button class="reject-btn" onclick="rejectUser('${u.id}')">✕</button></div>
+    </div>`;
+  });
   html+=`</div></div>`;
   area.innerHTML=html;
 }
-
-window.approveUser = async function(uid){
-  await updateDoc(doc(db,'users',uid),{approved:true});
-};
-window.rejectUser = async function(uid){
-  if(!confirm('Удалить пользователя?')) return;
-  await deleteDoc(doc(db,'users',uid));
-  // Also delete from auth - we can only delete from client-side the current user
-  // So we just remove the Firestore doc which blocks access
-};
+window.approveUser=async uid=>await updateDoc(doc(db,'users',uid),{approved:true});
+window.rejectUser=async uid=>{ if(confirm('Удалить?')) await deleteDoc(doc(db,'users',uid)); };
 
 // ── SETTINGS ──
 function loadSettingsIntoForm(){
-  const s = JSON.parse(localStorage.getItem('karkas_settings')||'{}');
-  if(s.company) document.getElementById('s-company').value=s.company;
-  if(s.foreman) document.getElementById('s-foreman').value=s.foreman;
+  const s=loadSettings();
+  document.getElementById('s-company').value=s.company||'tmn Frame';
+  document.getElementById('s-foreman').value=s.foreman||'';
 }
-window.openSettings  = ()=>document.getElementById('settingsModal').classList.add('open');
-window.closeSettings = ()=>document.getElementById('settingsModal').classList.remove('open');
-window.saveSettings  = function(){
-  localStorage.setItem('karkas_settings', JSON.stringify({
-    company: document.getElementById('s-company').value.trim(),
-    foreman: document.getElementById('s-foreman').value.trim(),
+function loadSettings(){try{return JSON.parse(localStorage.getItem('tmn_settings')||'{}')}catch(e){return{}}}
+window.openSettings=()=>document.getElementById('settingsModal').classList.add('open');
+window.closeSettings=()=>document.getElementById('settingsModal').classList.remove('open');
+window.saveSettings=function(){
+  localStorage.setItem('tmn_settings',JSON.stringify({
+    company:document.getElementById('s-company').value.trim(),
+    foreman:document.getElementById('s-foreman').value.trim()
   }));
   closeSettings();
 };
-function loadSettings(){ try{return JSON.parse(localStorage.getItem('karkas_settings')||'{}')}catch(e){return{}} }
 
 // ── PROJECT SELECT ──
 function refreshSelect(){
-  const keys=Object.keys(allProjects).sort((a,b)=>{
-    return (allProjects[b].savedAt||'') > (allProjects[a].savedAt||'') ? 1 : -1;
-  });
+  const keys=Object.keys(allProjects).sort((a,b)=>(allProjects[b].savedAt||'')>(allProjects[a].savedAt||'')?1:-1);
   const sel=document.getElementById('projSelect');
   const cur=sel.value;
   sel.innerHTML='<option value="">— новый проект —</option>';
-  keys.forEach(k=>{
-    const o=document.createElement('option');
-    o.value=k; o.textContent=k; sel.appendChild(o);
-  });
-  if(cur && allProjects[cur]) sel.value=cur;
-  document.getElementById('projCount').textContent=keys.length?`Проектов: ${keys.length}`:'';
+  keys.forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); });
+  if(cur&&allProjects[cur]) sel.value=cur;
+  document.getElementById('projCount') && (document.getElementById('projCount').textContent=keys.length?`${keys.length} проектов`:'');
 }
 
-window.loadProject = function(){
-  const name=document.getElementById('projSelect').value;
-  if(!name) return;
+window.loadProject=function(){
+  const name=document.getElementById('projSelect').value; if(!name) return;
   const p=allProjects[name]; if(!p) return;
   document.getElementById('projName').value=name;
   document.getElementById('fLen').value=p.L;
@@ -650,37 +854,47 @@ window.loadProject = function(){
   document.getElementById('fStep').value=p.step||0.6;
   document.getElementById('fPileDia').value=p.pileDia||'108';
   const pr=p.prices||{};
-  ['brus','osb','ins','roof','vap','flo','pile','fix'].forEach(k=>{
+  ['brus','osb','ins','roof','vap','resh','flosb','pile','fix'].forEach(k=>{
     const el=document.getElementById('p-'+k); if(el&&pr[k]!=null) el.value=pr[k];
   });
+  const sr2=p.sources||{};
+  const ur=p.urls||{};
+  ['brus','osb','ins','roof','vap','resh','flosb','pile','fix'].forEach(k=>{
+    const sel=document.getElementById('src-'+k); if(sel&&sr2[k]) sel.value=sr2[k];
+    const urlEl=document.getElementById('url-'+k); if(urlEl&&ur[k]!=null) urlEl.value=ur[k];
+  });
+  document.getElementById('p-markup').value=p.markup||0;
+  document.getElementById('p-works').value=p.works||0;
   setToggle('tog-osb',p.incOSB!==false); setToggle('tog-ins',p.incIns!==false);
-  setToggle('tog-vap',p.incVap!==false); setToggle('tog-flo',!!p.incFlo);
+  setToggle('tog-vap',p.incVap!==false); setToggle('tog-resh',p.incResh!==false);
+  setToggle('tog-flo',!!p.incFlo);
   buildType=p.type_key||'house'; roofType=p.roofType||'shed';
   fndType=p.fndType||'screw'; floors=p.floors||1;
   section=p.section||'150x50'; pileStep=p.pileStep||1.5;
   syncUI();
+  renderCurrentProject(name);
 };
 
-window.saveProject = async function(){
+window.saveProject=async function(){
   const name=document.getElementById('projName').value.trim();
   if(!name){alert('Введите название проекта');return;}
   const btn=document.getElementById('calcBtn');
   btn.textContent='⏳ СОХРАНЕНИЕ...'; btn.disabled=true;
-  const p=compute();
-  p.savedAt=new Date().toISOString();
-  p.savedBy=currentUser?.email||'';
+  const p=compute(); p.savedAt=new Date().toISOString(); p.savedBy=currentUser?.email||'';
   await setDoc(doc(db,'projects',name),p);
   document.getElementById('projSelect').value=name;
   btn.textContent='⚡ РАССЧИТАТЬ И СОХРАНИТЬ'; btn.disabled=false;
+  renderCurrentProject(name);
 };
 
-window.deleteProject = async function(){
-  const name=document.getElementById('projSelect').value;
-  if(!name) return;
+window.deleteProject=async function(){
+  const name=document.getElementById('projSelect').value; if(!name) return;
   if(!confirm(`Удалить «${name}»?`)) return;
   await deleteDoc(doc(db,'projects',name));
   document.getElementById('projSelect').value='';
   document.getElementById('projName').value='';
+  document.getElementById('currentProjectView').style.display='none';
+  document.getElementById('emptyBox').style.display='block';
 };
 
 // ── CONTROLS ──
@@ -691,7 +905,7 @@ window.setFloors=(n,el)=>{floors=n;ap(el);};
 window.setSection=(s,el)=>{section=s;ap(el);};
 window.setPileStep=(s,el)=>{pileStep=s;ap(el);};
 function ap(el){const c=el.closest('.pills')||el.closest('.type-grid');if(c)c.querySelectorAll('.pill,.ttab').forEach(e=>e.classList.remove('active'));el.classList.add('active');}
-window.tog=(el)=>el.classList.toggle('on');
+window.tog=el=>el.classList.toggle('on');
 function isOn(id){return document.getElementById(id).classList.contains('on');}
 function setToggle(id,val){const el=document.getElementById(id);if(!el)return;val?el.classList.add('on'):el.classList.remove('on');}
 function num(id){return parseFloat(document.getElementById(id).value)||0;}
@@ -702,18 +916,28 @@ function syncUI(){
 
 // ── COMPUTE ──
 function compute(){
-  const L=num('fLen')||6,W=num('fWid')||4,H=num('fH')||2.5;
+  const L=num('fLen')||6, W=num('fWid')||4, H=num('fH')||2.5;
   const step=parseFloat(document.getElementById('fStep').value)||0.6;
   const angle=num('fAngle')||25;
   const roofMat=document.getElementById('fRoofMat').value;
   const pileDia=document.getElementById('fPileDia').value;
+  const markup=num('p-markup');
+  const works=num('p-works');
   const prices={};
-  ['brus','osb','ins','roof','vap','flo','pile','fix'].forEach(k=>prices[k]=num('p-'+k));
-  const perim=2*(L+W),wallArea=perim*H*floors;
+  ['brus','osb','ins','roof','vap','resh','flosb','pile','fix'].forEach(k=>prices[k]=num('p-'+k));
+  const sources={};
+  const urls={};
+  ['brus','osb','ins','roof','vap','resh','flosb','pile','fix'].forEach(k=>{
+    const sel=document.getElementById('src-'+k); sources[k]=sel?sel.value.trim():'';
+    const urlEl=document.getElementById('url-'+k); urls[k]=urlEl?urlEl.value.trim():'';
+  });
+
+  const perim=2*(L+W), wallArea=perim*H*floors;
   const studCount=Math.ceil(perim/step)+4;
   const studM=Math.ceil(studCount*H*floors*WASTE);
   const plateM=Math.ceil(perim*2*floors*WASTE);
   const bridgeM=Math.ceil(perim*floors*WASTE);
+
   const rad=angle*Math.PI/180;
   let roofArea=0,rafterM=0,ridgeM=0,rafterCount=0,rafterLen=0;
   if(roofType==='shed'){rafterLen=W/Math.cos(rad);roofArea=L*rafterLen;rafterCount=Math.ceil(L/step)+1;}
@@ -722,6 +946,7 @@ function compute(){
   else{rafterLen=W;roofArea=L*W;rafterCount=Math.ceil(L/step)+1;}
   rafterM=Math.ceil(rafterCount*rafterLen*WASTE);
   const roofCover=Math.ceil(roofArea*WASTE);
+
   const sec=section.split('x').map(Number);
   const csa=(sec[0]/1000)*(sec[1]/1000);
   const timberM3=Math.ceil((studM+plateM+bridgeM+rafterM+(ridgeM||0))*csa*100)/100;
@@ -729,15 +954,24 @@ function compute(){
   const osbW=isOn('tog-osb')?Math.ceil(wallArea*2*WASTE/osbSheet):0;
   const osbR=isOn('tog-osb')?Math.ceil(roofArea*WASTE/osbSheet):0;
   const osbTot=osbW+osbR;
-  const insWall=isOn('tog-ins')?Math.ceil(wallArea*0.15*WASTE*10)/10:0;
-  const insRoof=isOn('tog-ins')?Math.ceil(roofArea*0.20*WASTE*10)/10:0;
+  const insWall=isOn('tog-ins')?Math.ceil(wallArea*0.1*WASTE*10)/10:0;
+  const insRoof=isOn('tog-ins')?Math.ceil(roofArea*0.1*WASTE*10)/10:0;
   const insTot=Math.ceil((insWall+insRoof)*10)/10;
   const vapArea=isOn('tog-vap')?Math.ceil((wallArea+roofArea)*WASTE):0;
-  let floorJoistM=0,floorBoardM2=0,floorVol=0;
-  if(isOn('tog-flo')){const jc=Math.ceil(L/0.6)+1;floorJoistM=Math.ceil(jc*W*WASTE);floorBoardM2=Math.ceil(L*W*WASTE);floorVol=Math.ceil(floorJoistM*csa*100)/100;}
-  const totalM3=Math.ceil((timberM3+floorVol)*100)/100;
+  // Обрешётка: контробрешётка 50×50 вдоль стропил + обрешётка 25×100 поперёк
+  const reshM=isOn('tog-resh')?Math.ceil((roofArea/0.3)*WASTE):0; // доска 25х100 шаг 300мм
+  const ventM=isOn('tog-resh')?Math.ceil(rafterCount*rafterLen*WASTE):0; // брусок 50х50
+  let floorOsbSheets=0, floorJoistM=0, floorJoistVol=0;
+  if(isOn('tog-flo')){
+    const jc=Math.ceil(L/0.6)+1;
+    floorJoistM=Math.ceil(jc*W*WASTE);
+    floorOsbSheets=Math.ceil(L*W*WASTE/osbSheet);
+    floorJoistVol=Math.ceil(floorJoistM*csa*100)/100;
+  }
+  const totalM3=Math.ceil((timberM3+floorJoistVol)*100)/100;
   let pileCount=0;
-  if(fndType!=='none')pileCount=(Math.ceil(L/pileStep)+1)*(Math.ceil(W/pileStep)+1);
+  if(fndType!=='none') pileCount=(Math.ceil(L/pileStep)+1)*(Math.ceil(W/pileStep)+1);
+
   const typeLabel={house:'Жилой дом',shed:'Хозблок / сарай',banya:'Баня'};
   const cTimber=Math.round(totalM3*prices.brus);
   const cFix=Math.round(cTimber*prices.fix/100);
@@ -745,122 +979,429 @@ function compute(){
   const cIns=Math.round(insTot*prices.ins);
   const cRoof=Math.round(roofCover*prices.roof);
   const cVap=Math.round(vapArea*prices.vap);
-  const cFlo=isOn('tog-flo')?Math.round(floorBoardM2*prices.flo):0;
+  const cResh=isOn('tog-resh')?Math.round((reshM+ventM)*prices.resh):0;
+  const cFlo=isOn('tog-flo')?Math.round(floorOsbSheets*prices.flosb):0;
   const cPile=Math.round(pileCount*prices.pile);
-  const total=cTimber+cFix+cOSB+cIns+cRoof+cVap+cFlo+cPile;
+  const matTotal=cTimber+cFix+cOSB+cIns+cRoof+cVap+cResh+cFlo+cPile;
+  const grandTotal=matTotal+markup+works;
+
   return{
     type:typeLabel[buildType]||'Постройка',type_key:buildType,
     L,W,H,floors,angle,step,section,roofType,roofMat,fndType,pileStep,pileDia,
     studCount,studM,plateM,bridgeM,rafterCount,rafterM,ridgeM:ridgeM||0,
     totalM3,roofCover,osbW,osbR,osbTot,insWall,insRoof,insTot,
-    vapArea,floorJoistM,floorBoardM2,pileCount,
-    cTimber,cFix,cOSB,cIns,cRoof,cVap,cFlo,cPile,total,
-    incOSB:isOn('tog-osb'),incIns:isOn('tog-ins'),incVap:isOn('tog-vap'),incFlo:isOn('tog-flo'),
-    prices
+    vapArea,reshM,ventM,floorJoistM,floorOsbSheets,pileCount,
+    cTimber,cFix,cOSB,cIns,cRoof,cVap,cResh,cFlo,cPile,
+    matTotal,markup,works,grandTotal,
+    incOSB:isOn('tog-osb'),incIns:isOn('tog-ins'),incVap:isOn('tog-vap'),
+    incResh:isOn('tog-resh'),incFlo:isOn('tog-flo'),
+    prices, sources, urls
   };
 }
 
-// ── RENDER APP ──
-function renderAll(){
-  const keys=Object.keys(allProjects).sort((a,b)=>(allProjects[b].savedAt||'')>(allProjects[a].savedAt||'')?1:-1);
-  document.getElementById('emptyBox').style.display=keys.length?'none':'block';
-  document.getElementById('resultsBox').style.display=keys.length?'block':'none';
-  document.getElementById('projList').innerHTML=keys.map(k=>card(k,allProjects[k])).join('');
+// ── RENDER CURRENT PROJECT (calc tab) ──
+function renderCurrentProject(name){
+  const p=allProjects[name]; if(!p) return;
+  document.getElementById('emptyBox').style.display='none';
+  const view=document.getElementById('currentProjectView');
+  view.style.display='block';
+  view.innerHTML=projectCardHTML(name,p,true);
 }
 
-function card(name,p){
+// ── RENDER PROJECTS TAB ──
+function renderProjectsTab(){
+  const keys=Object.keys(allProjects).sort((a,b)=>(allProjects[b].savedAt||'')>(allProjects[a].savedAt||'')?1:-1);
+  const empty=document.getElementById('projEmpty');
+  const list=document.getElementById('projList');
+  if(!keys.length){empty.style.display='block';list.innerHTML='';return;}
+  empty.style.display='none';
+  list.innerHTML=keys.map(k=>projectCardHTML(k,allProjects[k],false)).join('');
+}
+
+function projectCardHTML(name,p,isCurrent){
   const saved=p.savedAt?new Date(p.savedAt).toLocaleString('ru'):'—';
+  const roofMap={shed:'Односкатная',gable:'Двускатная',hip:'Вальмовая',flat:'Плоская'};
+
   let t=`<div class="proj-card">
   <div class="proj-card-header">
     <div>
       <div class="proj-name">${name}</div>
-      <div class="proj-meta">${p.type} · ${p.L}×${p.W}м · выс.${p.H}м · ${p.floors}эт. · ${saved}${p.savedBy?' · '+p.savedBy:''}</div>
+      <div class="proj-meta">${p.type} · ${p.L}×${p.W}м · выс.${p.H}м · ${p.floors}эт. · ${roofMap[p.roofType]||''} · ${saved}</div>
     </div>
     <div class="proj-actions">
-      <span class="proj-total">${p.total.toLocaleString()} ₽</span>
+      <div class="proj-total-wrap">
+        <span class="proj-total-label">Итого с работами</span>
+        <span class="proj-total">${(p.grandTotal||p.matTotal||0).toLocaleString()} ₽</span>
+      </div>
       <button class="print-btn" onclick="openEstimate('${name.replace(/'/g,"\\'")}')">📄 Смета</button>
     </div>
   </div>
   <div class="proj-body">
   <table class="mtable">
-    <thead><tr><th>Материал</th><th>Кол-во</th><th>Ед.</th><th style="text-align:right">Стоимость</th></tr></thead>
+    <thead><tr><th>Материал</th><th>Кол-во</th><th>Ед.</th><th style="text-align:right">Цена/ед.</th><th style="text-align:right">Стоимость</th><th style="color:#4a5280;font-size:9px;">Источник</th></tr></thead>
     <tbody>`;
+  const src=p.sources||{};
+  const ur=p.urls||{};
+
   t+=sr('КАРКАС');
-  t+=r('Брус — стойки, обвязки, стропила',p.totalM3,'м³',p.cTimber);
-  t+=r('Крепёж, саморезы, уголки','~','',p.cFix);
+  t+=r('Брус — стойки, обвязки, стропила',p.totalM3,'м³',p.prices?.brus,p.cTimber,src.brus,ur.brus);
+  t+=r(`Стоек ${p.studCount} шт`,p.studM,'пм',null,null);
+  t+=r('Крепёж, саморезы, уголки','~','',null,p.cFix,src.fix,ur.fix);
   t+=sr('КРОВЛЯ');
-  t+=r(p.roofMat,p.roofCover,'м²',p.cRoof);
-  if(p.incOSB){t+=sr('ОБШИВКА OSB');t+=r('Стены (2 стороны)',p.osbW,'лист');t+=r('Кровля',p.osbR,'лист');t+=r('OSB итого',p.osbTot,'лист',p.cOSB);}
-  if(p.incIns){t+=sr('УТЕПЛИТЕЛЬ');t+=r('Стены 150мм',p.insWall,'м³');t+=r('Кровля 200мм',p.insRoof,'м³');t+=r('Итого',p.insTot,'м³',p.cIns);}
-  if(p.incVap){t+=sr('ПЛЁНКИ');t+=r('Пароизоляция + ветрозащита',p.vapArea,'м²',p.cVap);}
-  if(p.incFlo){t+=sr('ПОЛ');t+=r('Лаги',p.floorJoistM,'пм');t+=r('Половая доска',p.floorBoardM2,'м²',p.cFlo);}
-  if(p.pileCount>0){
-    t+=sr('ФУНДАМЕНТ');
-    t+=r(p.fndType==='screw'?`Сваи Ø${p.pileDia}мм`:`Столбы`,p.pileCount,'шт',p.cPile);
-  }
+  t+=r(p.roofMat,p.roofCover,'м²',p.prices?.roof,p.cRoof,src.roof,ur.roof);
+  if(p.incResh){t+=sr('ОБРЕШЁТКА И ВЕНТЗАЗОР');t+=r('Доска обрешётки 25×100',p.reshM,'пм',p.prices?.resh,null,src.resh,ur.resh);t+=r('Брусок вентзазора 50×50',p.ventM,'пм',null,p.cResh,src.resh,ur.resh);}
+  if(p.incOSB){t+=sr('ОБШИВКА OSB-3');t+=r('Стены (2 стороны)',p.osbW,'лист',null,null);t+=r('Кровля',p.osbR,'лист',null,null);t+=r('Итого OSB',p.osbTot,'лист',p.prices?.osb,p.cOSB,src.osb,ur.osb);}
+  if(p.incIns){t+=sr('УТЕПЛИТЕЛЬ');t+=r('Минвата стены',p.insWall,'м³',null,null);t+=r('Минвата кровля',p.insRoof,'м³',null,null);t+=r('Итого минвата',p.insTot,'м³',p.prices?.ins,p.cIns,src.ins,ur.ins);}
+  if(p.incVap){t+=sr('ПЛЁНКИ');t+=r('Пароизоляция + ветрозащита',p.vapArea,'м²',p.prices?.vap,p.cVap,src.vap,ur.vap);}
+  if(p.incFlo){t+=sr('ПОЛ');t+=r('Лаги (шаг 600мм)',p.floorJoistM,'пм',null,null);t+=r('OSB пол',p.floorOsbSheets,'лист',p.prices?.flosb,p.cFlo,src.flosb,ur.flosb);}
+  if(p.pileCount>0){t+=sr('ФУНДАМЕНТ');t+=r(p.fndType==='screw'?`Сваи Ø${p.pileDia}мм`:'Столбы',p.pileCount,'шт',p.prices?.pile,p.cPile,src.pile,ur.pile);}
+
   t+=`</tbody></table>
-  <div class="total-box"><span class="total-lbl">ИТОГО ~</span><span class="total-val">${p.total.toLocaleString()} ₽</span></div>
+  <div class="summary-grid">
+    <div class="summary-box"><div class="summary-label">Материалы</div><div class="summary-val blue">${(p.matTotal||0).toLocaleString()} ₽</div></div>
+    <div class="summary-box"><div class="summary-label">Наценка</div><div class="summary-val gold">${(p.markup||0).toLocaleString()} ₽</div></div>
+    <div class="summary-box highlight"><div class="summary-label">Работы</div><div class="summary-val green">${(p.works||0).toLocaleString()} ₽</div></div>
+  </div>
+  <div class="total-box" style="margin-top:8px;">
+    <span class="total-lbl">ИТОГО (материалы + наценка + работы)</span>
+    <span class="total-val">${(p.grandTotal||0).toLocaleString()} ₽</span>
+  </div>
   </div></div>`;
   return t;
 }
-function r(name,qty,unit,cost){return`<tr><td class="mat-name">${name}</td><td class="mat-qty">${qty}</td><td class="mat-unit">${unit||''}</td><td class="mat-cost">${cost!=null?cost.toLocaleString()+' ₽':''}</td></tr>`;}
-function sr(label){return`<tr class="sec-row"><td colspan="4">${label}</td></tr>`;}
 
-// ── ESTIMATE ──
-window.openEstimate = function(name){
+function r(name,qty,unit,uprice,cost,source,url){
+  const linkHTML = url ? `<a href="${url}" target="_blank" rel="noopener">🔗 Открыть товар</a>` : '';
+  const tipHTML = (source||url) ? `<div class="tip">📦 <b>${source||'Источник не указан'}</b>${linkHTML}</div>` : '';
+  const costCell = cost!=null
+    ? `<td class="price-cell"><span class="mat-cost-wrap">${cost.toLocaleString()} ₽</span>${tipHTML}</td>`
+    : `<td></td>`;
+  const upriceStr = uprice!=null ? `<span style="color:var(--muted);font-size:10px;">${uprice.toLocaleString()} ₽</span>` : '';
+  return`<tr>
+    <td class="mat-name">${name}</td>
+    <td class="mat-qty">${qty}</td>
+    <td class="mat-unit">${unit||''}</td>
+    <td style="text-align:right">${upriceStr}</td>
+    ${costCell}
+    <td></td>
+  </tr>`;
+}
+function sr(label){return`<tr class="sec-row"><td colspan="6">${label}</td></tr>`;}
+
+// ── ESTIMATE (client view — NO PRICES) ──
+window.openEstimate=function(name){
   const p=allProjects[name]; if(!p) return;
   const s=loadSettings();
   const today=new Date().toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
-  const num=new Date().toLocaleDateString('ru-RU').replace(/\./g,'');
+  const numStr=new Date().toLocaleDateString('ru-RU').replace(/\./g,'');
   const roofMap={shed:'Односкатная',gable:'Двускатная',hip:'Вальмовая',flat:'Плоская'};
   const fndMap={screw:'Винтовые сваи',column:'Столбчатый',none:'Без фундамента'};
+  const co=s.company||'tmn Frame';
+
   let rows='';
-  rows+=esr('Каркас');rows+=er('Брус (стойки, обвязки, стропила)',p.totalM3,'м³',p.cTimber);rows+=er('Крепёж, саморезы, уголки','—','',p.cFix);
-  rows+=esr('Кровля');rows+=er(p.roofMat,p.roofCover,'м²',p.cRoof);
-  if(p.incOSB){rows+=esr('Обшивка OSB');rows+=er('Плиты OSB 1250×2500',p.osbTot,'лист',p.cOSB);}
-  if(p.incIns){rows+=esr('Утеплитель');rows+=er('Минеральная вата',p.insTot,'м³',p.cIns);}
-  if(p.incVap){rows+=esr('Плёнки');rows+=er('Пароизоляция + ветрозащита',p.vapArea,'м²',p.cVap);}
-  if(p.incFlo){rows+=esr('Пол');rows+=er('Лаги + половая доска',p.floorBoardM2,'м²',p.cFlo);}
-  if(p.pileCount>0){rows+=esr('Фундамент');rows+=er(p.fndType==='screw'?`Сваи Ø${p.pileDia}мм`:'Столбы',p.pileCount,'шт',p.cPile);}
-  const co=s.company||'КаркасПро';
+  rows+=esr('Каркас');
+  rows+=er('Брус силового каркаса',p.totalM3,'м³');
+  rows+=er('Крепёж (саморезы, уголки, скобы)','комплект','');
+  rows+=esr('Кровля');
+  rows+=er(p.roofMat,p.roofCover,'м²');
+  if(p.incResh){rows+=esr('Обрешётка и вентиляционный зазор');rows+=er('Доска обрешётки 25×100',p.reshM,'пм');rows+=er('Брусок вентзазора 50×50',p.ventM,'пм');}
+  if(p.incOSB){rows+=esr('Обшивка OSB-3');rows+=er('Плиты OSB-3 1250×2500',p.osbTot,'лист');}
+  if(p.incIns){rows+=esr('Утеплитель');rows+=er('Минеральная вата',p.insTot,'м³');}
+  if(p.incVap){rows+=esr('Плёнки');rows+=er('Пароизоляция + ветрозащита',p.vapArea,'м²');}
+  if(p.incFlo){rows+=esr('Пол');rows+=er('Лаги + OSB пол',p.floorOsbSheets,'лист');}
+  if(p.pileCount>0){rows+=esr('Фундамент');rows+=er(p.fndType==='screw'?`Сваи винтовые Ø${p.pileDia}мм`:'Столбы',p.pileCount,'шт');}
+
+  const brandHTML = co.toLowerCase().includes('tmn') || co.toLowerCase().includes('frame')
+    ? `<span style="color:#2d7aff">tmn</span> Frame`
+    : co;
+
   document.getElementById('printContent').innerHTML=`
   <div class="est-header">
-    <div><div class="est-company-name">${co}</div><div class="est-company-sub">Строительство по каркасной технологии</div></div>
-    <div class="est-meta"><div class="est-label">Смета №</div><div class="est-number">${num}</div><div class="est-date">от ${today}</div></div>
-  </div>
-  <div class="est-client-block">
-    <div><div class="ecf-label">Проект / Клиент</div><div class="ecf-val">${name}</div></div>
-    <div><div class="ecf-label">Тип постройки</div><div class="ecf-val">${p.type}</div></div>
-  </div>
-  <div class="est-obj-block">
-    <div class="est-obj-title">Параметры объекта</div>
-    <div class="est-obj-grid">
-      <div class="est-obj-item"><div class="oi-label">Размер</div><div class="oi-val">${p.L}×${p.W}м</div></div>
-      <div class="est-obj-item"><div class="oi-label">Высота</div><div class="oi-val">${p.H}м</div></div>
-      <div class="est-obj-item"><div class="oi-label">Этажей</div><div class="oi-val">${p.floors}</div></div>
-      <div class="est-obj-item"><div class="oi-label">Кровля</div><div class="oi-val">${roofMap[p.roofType]||p.roofType}</div></div>
-      <div class="est-obj-item"><div class="oi-label">Покрытие</div><div class="oi-val">${p.roofMat}</div></div>
-      <div class="est-obj-item"><div class="oi-label">Стойки</div><div class="oi-val">${p.section}мм</div></div>
-      <div class="est-obj-item"><div class="oi-label">Фундамент</div><div class="oi-val">${fndMap[p.fndType]||'—'}</div></div>
+    <div>
+      <div class="est-brand">${brandHTML}</div>
+      <div class="est-brand-sub">КАРКАСНОЕ СТРОИТЕЛЬСТВО · ТЮМЕНЬ</div>
+    </div>
+    <div class="est-meta-block">
+      <div class="est-meta-label">Смета №</div>
+      <div class="est-num">${numStr}</div>
+      <div class="est-date">от ${today}</div>
     </div>
   </div>
+
+  <div class="est-client">
+    <div><div class="ecf-label">Проект / Клиент</div><div class="ecf-val">${name}</div></div>
+    <div><div class="ecf-label">Тип постройки</div><div class="ecf-val">${p.type}</div></div>
+    <div><div class="ecf-label">Площадь</div><div class="ecf-val">${(p.L*p.W).toFixed(1)} м²</div></div>
+  </div>
+
+  <div class="est-params">
+    <div class="est-params-title">Параметры объекта</div>
+    <div class="est-params-grid">
+      <div class="est-param-item"><div class="epi-label">Размер</div><div class="epi-val">${p.L}×${p.W}м</div></div>
+      <div class="est-param-item"><div class="epi-label">Высота стен</div><div class="epi-val">${p.H}м</div></div>
+      <div class="est-param-item"><div class="epi-label">Этажей</div><div class="epi-val">${p.floors}</div></div>
+      <div class="est-param-item"><div class="epi-label">Кровля</div><div class="epi-val">${roofMap[p.roofType]||p.roofType}</div></div>
+      <div class="est-param-item"><div class="epi-label">Покрытие</div><div class="epi-val">${p.roofMat}</div></div>
+      <div class="est-param-item"><div class="epi-label">Каркас</div><div class="epi-val">${p.section}мм</div></div>
+      <div class="est-param-item"><div class="epi-label">Шаг стоек</div><div class="epi-val">${Math.round(p.step*1000)}мм</div></div>
+      <div class="est-param-item"><div class="epi-label">Фундамент</div><div class="epi-val">${fndMap[p.fndType]||'—'}</div></div>
+    </div>
+  </div>
+
   <table class="est-table">
-    <thead><tr><th style="width:55%">Наименование</th><th>Кол-во</th><th>Ед.</th><th>Сумма, ₽</th></tr></thead>
+    <thead><tr>
+      <th style="width:60%">Наименование материала</th>
+      <th>Количество</th>
+      <th>Ед. изм.</th>
+    </tr></thead>
     <tbody>${rows}</tbody>
   </table>
-  <div class="est-total-row"><div class="est-total-box"><span class="est-total-label">Итого материалы:</span><span class="est-total-val">${p.total.toLocaleString()} ₽</span></div></div>
-  <div class="est-note">✔ Запас 10% на отходы включён. ✔ Монтажные работы рассчитываются отдельно. ✔ Цены действительны на дату составления.</div>
+
+  <div class="est-financials">
+    <div class="est-fin-row">
+      <span class="est-fin-label">Стоимость монтажных работ</span>
+      <span class="est-fin-val">${(p.works||0).toLocaleString()} ₽</span>
+    </div>
+    <div class="est-fin-row total-row">
+      <span class="est-fin-label">ИТОГО К ОПЛАТЕ (материалы + работы)</span>
+      <span class="est-fin-val">${(p.grandTotal||0).toLocaleString()} ₽</span>
+    </div>
+  </div>
+
+  <div class="est-note">
+    ✔ В расчёт включён запас 10% на отходы и подрезку.<br>
+    ✔ Стоимость материалов включена в итоговую сумму.<br>
+    ✔ Смета действительна 14 дней с даты составления.
+  </div>
+
   <div class="est-sign">
     <div><div class="sign-label">Исполнитель</div><div class="sign-line">${s.foreman||co} / подпись ___________</div></div>
     <div><div class="sign-label">Заказчик</div><div class="sign-line">${name} / подпись ___________</div></div>
   </div>
-  <div class="est-footer"><span>${co} · Смета №${num} · ${today}</span><span>КаркасПро</span></div>`;
+
+  <div class="est-footer">
+    <span>${co} · Смета №${numStr} · ${today}</span>
+    <span>tmn Frame — каркасное строительство</span>
+  </div>`;
+
   document.getElementById('printOverlay').classList.add('open');
 };
 window.closePrint=()=>document.getElementById('printOverlay').classList.remove('open');
 
-function er(name,qty,unit,cost){return`<tr><td>${name}</td><td class="est-qty">${qty}</td><td class="est-unit">${unit||''}</td><td class="est-cost">${cost!=null?cost.toLocaleString():''}</td></tr>`;}
-function esr(label){return`<tr class="est-sec-row"><td colspan="4">${label}</td></tr>`;}
+function er(name,qty,unit){return`<tr><td>${name}</td><td class="est-qty">${qty}</td><td class="est-unit">${unit||''}</td></tr>`;}
+function esr(label){return`<tr class="est-sec-row"><td colspan="3">${label}</td></tr>`;}
+// ══════════════ PRICE TAB ══════════════
+
+const CATS = ['Каркас','Кровля','Обшивка','Утеплитель','Плёнки','Обрешётка','Пол','Фундамент','Крепёж','Прочее'];
+
+function getInterval(){
+  return parseInt(localStorage.getItem('tmn_check_interval')||'7');
+}
+window.saveInterval=function(){
+  localStorage.setItem('tmn_check_interval', document.getElementById('checkInterval').value);
+};
+
+function freshness(updatedAt){
+  if(!updatedAt) return {cls:'overdue', label:'Цена не указана'};
+  const days = Math.floor((Date.now()-new Date(updatedAt).getTime())/(1000*60*60*24));
+  const interval = getInterval();
+  if(days <= Math.floor(interval*0.5)) return {cls:'fresh', label:`Обновлено ${days===0?'сегодня':days+' дн. назад'}`};
+  if(days <= interval) return {cls:'stale', label:`${days} дн. назад — скоро проверить`};
+  return {cls:'overdue', label:`${days} дн. — требует обновления!`};
+}
+
+function renderPriceTab(){
+  const wrap = document.getElementById('priceTableWrap');
+  const items = Object.entries(allPrices);
+  // restore interval setting
+  const iv = getInterval();
+  const sel = document.getElementById('checkInterval');
+  if(sel) sel.value = String(iv);
+
+  if(!items.length){
+    wrap.innerHTML=`<div class="price-empty"><div class="eico">💰</div><p>Нет материалов в прайсе.<br>Нажмите <strong style="color:var(--accent)">«+ Добавить материал»</strong></p></div>`;
+    return;
+  }
+
+  // Group by category
+  const grouped={};
+  CATS.forEach(c=>grouped[c]=[]);
+  items.forEach(([id,mat])=>{
+    const cat=mat.category||'Прочее';
+    if(!grouped[cat]) grouped[cat]=[];
+    grouped[cat].push({id,...mat});
+  });
+
+  let html='';
+  CATS.forEach(cat=>{
+    const list=grouped[cat];
+    if(!list.length) return;
+    html+=`<div class="price-category">
+      <div class="price-cat-title">${cat}</div>
+      <div class="price-items">`;
+    list.sort((a,b)=>(a.name||'').localeCompare(b.name||'')).forEach(mat=>{
+      const f=freshness(mat.updatedAt);
+      const lastPrices = mat.history ? mat.history.slice(-3).reverse() : [];
+      const histHTML = lastPrices.length>1
+        ? lastPrices.slice(1).map(h=>`<span>${h.price.toLocaleString()} ₽ · ${new Date(h.date).toLocaleDateString('ru')}</span>`).join(' → ')
+        : '';
+      html+=`<div class="price-item-card ${f.cls}" id="pic-${mat.id}">
+        <div class="pic-left">
+          <div class="pic-name">
+            <span class="freshness-dot ${f.cls}"></span>
+            ${mat.name}
+            ${mat.note?`<span style="font-size:10px;color:var(--muted);font-weight:400">${mat.note}</span>`:''}
+          </div>
+          <div class="pic-supplier">
+            🏪 ${mat.supplier||'—'}
+            ${mat.url?`· <a href="${mat.url}" target="_blank" rel="noopener">🔗 Открыть товар</a>`:''}
+          </div>
+          <div class="pic-updated freshness-text ${f.cls}">${f.label}</div>
+          ${histHTML?`<div class="pic-history">История: ${histHTML}</div>`:''}
+          <div class="pic-update-form" id="form-${mat.id}">
+            <input type="number" class="pic-update-input" id="inp-${mat.id}" placeholder="Новая цена" min="0">
+            <button class="pic-confirm-btn" onclick="confirmPrice('${mat.id}')">✓ Сохранить</button>
+            <button class="btn-ghost" style="padding:5px 10px;font-size:11px;" onclick="cancelUpdate('${mat.id}')">Отмена</button>
+          </div>
+        </div>
+        <div class="pic-right">
+          <div><span class="pic-price">${mat.price!=null?mat.price.toLocaleString():'—'}</span><span class="pic-unit">₽/${mat.unit||'ед.'}</span></div>
+          <div class="pic-actions">
+            <button class="pic-update-btn" onclick="startUpdate('${mat.id}','${mat.price||0}')">↻ Обновить цену</button>
+            <button class="pic-edit-btn" onclick="openEditMaterial('${mat.id}')">✏</button>
+            <button class="pic-del-btn" onclick="deleteMaterial('${mat.id}')">✕</button>
+          </div>
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  wrap.innerHTML=html;
+}
+
+window.startUpdate=function(id, currentPrice){
+  const form=document.getElementById('form-'+id);
+  const inp=document.getElementById('inp-'+id);
+  form.classList.add('show');
+  inp.value=currentPrice;
+  inp.focus();
+  inp.select();
+};
+
+window.cancelUpdate=function(id){
+  document.getElementById('form-'+id)?.classList.remove('show');
+};
+
+window.confirmPrice=async function(id){
+  const inp=document.getElementById('inp-'+id);
+  const newPrice=parseFloat(inp.value);
+  if(isNaN(newPrice)||newPrice<0){alert('Введите корректную цену');return;}
+  const mat=allPrices[id];
+  const history=[...(mat.history||[]),{price:newPrice,date:new Date().toISOString()}];
+  if(history.length>10) history.splice(0,history.length-10);
+  await updateDoc(doc(db,'pricelist',id),{
+    price:newPrice,
+    updatedAt:new Date().toISOString(),
+    history
+  });
+  document.getElementById('form-'+id)?.classList.remove('show');
+};
+
+window.openAddMaterial=function(){
+  document.getElementById('matEditId').value='';
+  document.getElementById('matModalTitle').textContent='+ Добавить материал';
+  document.getElementById('mat-name').value='';
+  document.getElementById('mat-price').value='';
+  document.getElementById('mat-url').value='';
+  document.getElementById('mat-note').value='';
+  document.getElementById('materialModal').classList.add('open');
+};
+
+window.openEditMaterial=function(id){
+  const mat=allPrices[id]; if(!mat) return;
+  document.getElementById('matEditId').value=id;
+  document.getElementById('matModalTitle').textContent='✏ Редактировать';
+  document.getElementById('mat-name').value=mat.name||'';
+  document.getElementById('mat-price').value=mat.price||'';
+  document.getElementById('mat-unit').value=mat.unit||'м³';
+  document.getElementById('mat-supplier').value=mat.supplier||'Леруа Мерлен Тюмень';
+  document.getElementById('mat-url').value=mat.url||'';
+  document.getElementById('mat-category').value=mat.category||'Каркас';
+  document.getElementById('mat-note').value=mat.note||'';
+  document.getElementById('materialModal').classList.add('open');
+};
+
+window.closeMaterialModal=function(){
+  document.getElementById('materialModal').classList.remove('open');
+};
+
+window.saveMaterial=async function(){
+  const editId=document.getElementById('matEditId').value;
+  const name=document.getElementById('mat-name').value.trim();
+  if(!name){alert('Введите название материала');return;}
+  const price=parseFloat(document.getElementById('mat-price').value)||0;
+  const data={
+    name,
+    unit:document.getElementById('mat-unit').value,
+    supplier:document.getElementById('mat-supplier').value,
+    url:document.getElementById('mat-url').value.trim(),
+    category:document.getElementById('mat-category').value,
+    note:document.getElementById('mat-note').value.trim(),
+    price,
+    updatedAt:new Date().toISOString(),
+  };
+  if(editId){
+    const existing=allPrices[editId];
+    const history=[...(existing?.history||[]),{price,date:new Date().toISOString()}];
+    if(history.length>10) history.splice(0,history.length-10);
+    data.history=history;
+    await updateDoc(doc(db,'pricelist',editId),data);
+  } else {
+    data.history=[{price,date:new Date().toISOString()}];
+    data.createdAt=new Date().toISOString();
+    const newRef=doc(collection(db,'pricelist'));
+    await setDoc(newRef,data);
+  }
+  closeMaterialModal();
+};
+
+window.deleteMaterial=async function(id){
+  if(!confirm('Удалить материал из прайса?')) return;
+  await deleteDoc(doc(db,'pricelist',id));
+};
+
+// Sync sidebar price inputs from shared pricelist
+function syncSidebarPrices(){
+  // Map pricelist categories to sidebar inputs by name matching
+  const keyMap={
+    'brus': ['брус','timber','lumber'],
+    'osb':  ['osb','осб'],
+    'ins':  ['мин','утепл','mineral','wool'],
+    'roof': ['кровл','профл','метал','roof'],
+    'vap':  ['паро','vapor','wind'],
+    'resh': ['обреш','resha','board 25'],
+    'flosb':['osb пол','пол osb','floor'],
+    'pile': ['свая','сваи','столб','pile'],
+    'fix':  ['крепёж','крепеж','fastener'],
+  };
+  Object.entries(allPrices).forEach(([id,mat])=>{
+    const nameLow=(mat.name||'').toLowerCase();
+    Object.entries(keyMap).forEach(([key,patterns])=>{
+      if(patterns.some(p=>nameLow.includes(p))){
+        const el=document.getElementById('p-'+key);
+        // Only update if price exists and input is at default or matches
+        if(el && mat.price>0){
+          // Don't auto-overwrite user's manual entry silently
+          // Just update supplier dropdown and URL
+          const srcEl=document.getElementById('src-'+key);
+          const urlEl=document.getElementById('url-'+key);
+          if(srcEl && mat.supplier) srcEl.value=mat.supplier;
+          if(urlEl && mat.url) urlEl.value=mat.url;
+        }
+      }
+    });
+  });
+}
 
 </script>
 </body>
