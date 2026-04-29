@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>КаркасПро</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111318;--panel:#1a1d27;--card:#20243a;--border:#2c3155;
+  --accent:#f0a500;--accent2:#e05520;--text:#eef0fc;--muted:#6b739e;
+  --green:#3ecf82;--red:#e05555;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ══ AUTH SCREENS ══ */
+.auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;}
+.auth-screen.active{display:flex;}
+.auth-logo{font-family:'Bebas Neue';font-size:48px;letter-spacing:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.auth-sub{font-size:12px;color:var(--muted);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-bottom:36px;}
+.auth-box{background:var(--panel);border:2px solid var(--border);border-radius:16px;padding:32px;width:380px;max-width:95vw;}
+.auth-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:22px;}
+.auth-field{margin-bottom:14px;}
+.auth-field label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.auth-field input{width:100%;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:'Inter';font-size:14px;font-weight:600;transition:.2s;}
+.auth-field input:focus{outline:none;border-color:var(--accent);}
+.auth-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:6px;}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.28);}
+.auth-btn:disabled{opacity:.5;transform:none;cursor:not-allowed;}
+.auth-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--muted);}
+.auth-switch a{color:var(--accent);cursor:pointer;font-weight:700;text-decoration:none;}
+.auth-error{background:rgba(224,85,85,.1);border:1px solid var(--red);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--red);margin-bottom:14px;display:none;}
+.auth-error.show{display:block;}
+
+/* Pending screen */
+.pending-screen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.pending-screen.active{display:flex;}
+.pending-icon{font-size:60px;margin-bottom:20px;}
+.pending-title{font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;color:var(--accent);margin-bottom:10px;}
+.pending-text{color:var(--muted);font-size:14px;line-height:1.7;max-width:400px;}
+.pending-logout{margin-top:24px;padding:8px 20px;border:2px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-weight:700;font-size:12px;cursor:pointer;transition:.2s;}
+.pending-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* ══ HEADER ══ */
+.header{display:none;height:58px;background:var(--panel);border-bottom:2px solid var(--border);align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+.header.active{display:flex;}
+.logo{font-family:'Bebas Neue';font-size:26px;letter-spacing:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.hdr-btn{padding:6px 14px;border-radius:8px;border:2px solid var(--border);background:var(--card);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px;}
+.hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
+.hdr-btn.danger:hover{border-color:var(--red);color:var(--red);}
+.sync-badge{font-size:11px;font-weight:700;color:var(--green);padding:4px 10px;border-radius:12px;background:rgba(61,207,130,.1);border:1px solid rgba(61,207,130,.3);}
+.user-email{font-size:11px;color:var(--muted);font-weight:600;}
+.proj-count{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1px;}
+
+/* ══ LAYOUT ══ */
+.app-body{display:none;flex:1;overflow:hidden;}
+.app-body.active{display:grid;grid-template-columns:370px 1fr;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{background:var(--panel);border-right:2px solid var(--border);overflow-y:auto;height:calc(100vh - 58px);position:sticky;top:58px;padding:16px 16px 32px;}
+.sb-title{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:10px;margin-top:16px;display:flex;align-items:center;gap:7px;}
+.sb-title::before{content:'';width:3px;height:16px;background:var(--accent);border-radius:2px;flex-shrink:0;}
+.sep{height:1px;background:var(--border);margin:8px 0;}
+.proj-bar{display:flex;gap:6px;align-items:center;}
+.proj-select{flex:1;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Inter';font-size:13px;font-weight:600;transition:.2s;-webkit-appearance:none;}
+.proj-select:focus{outline:none;border-color:var(--accent);}
+.proj-select option{background:var(--card);}
+.icon-btn{width:34px;height:34px;border-radius:8px;border:2px solid var(--border);background:var(--card);color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+.icon-btn.del:hover{border-color:var(--red);color:var(--red);}
+.field{margin-bottom:10px;}
+.flabel{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;display:block;}
+input[type=number],input[type=text],select{width:100%;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'Inter';font-size:13px;font-weight:600;transition:.2s;-webkit-appearance:none;}
+input:focus,select:focus{outline:none;border-color:var(--accent);}
+select option{background:var(--card);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.pills{display:flex;flex-wrap:wrap;gap:5px;}
+.pill{padding:5px 10px;border:2px solid var(--border);border-radius:16px;background:var(--card);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.pill:hover,.pill.active{border-color:var(--accent);color:var(--accent);}
+.pill.active{background:rgba(240,165,0,.12);}
+.type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+.ttab{border:2px solid var(--border);border-radius:9px;background:var(--card);padding:8px 4px;text-align:center;cursor:pointer;transition:.2s;color:var(--muted);font-size:11px;font-weight:700;}
+.ttab .ico{font-size:17px;display:block;margin-bottom:3px;}
+.ttab:hover,.ttab.active{border-color:var(--accent);color:var(--accent);}
+.ttab.active{background:rgba(240,165,0,.12);}
+.tog{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:2px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:5px;transition:.2s;}
+.tog.on{border-color:var(--accent);background:rgba(240,165,0,.07);}
+.tog label{font-size:12px;font-weight:600;cursor:pointer;pointer-events:none;}
+.sw{width:30px;height:16px;background:var(--border);border-radius:8px;position:relative;transition:.2s;flex-shrink:0;}
+.tog.on .sw{background:var(--accent);}
+.sw::after{content:'';width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:.2s;}
+.tog.on .sw::after{transform:translateX(14px);}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.price-item label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:3px;}
+.calc-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-family:'Bebas Neue';font-size:20px;letter-spacing:3px;cursor:pointer;transition:.2s;margin-top:8px;}
+.calc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.28);}
+.calc-btn:disabled{opacity:.6;transform:none;cursor:not-allowed;}
+.waste-hint{font-size:10px;color:var(--muted);text-align:center;margin-top:5px;}
+
+/* ══ MAIN ══ */
+.main{overflow-y:auto;height:calc(100vh - 58px);padding:20px;}
+.empty{text-align:center;padding:90px 20px;color:var(--muted);}
+.empty .eico{font-size:56px;margin-bottom:14px;}
+.empty p{font-size:13px;line-height:1.8;}
+.proj-list{display:flex;flex-direction:column;gap:14px;}
+.proj-card{background:var(--panel);border:2px solid var(--border);border-radius:14px;overflow:hidden;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.proj-card-header{padding:12px 18px;display:flex;align-items:flex-start;justify-content:space-between;background:rgba(240,165,0,.07);border-bottom:1px solid var(--border);}
+.proj-name{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;color:var(--accent);}
+.proj-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.proj-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:12px;}
+.proj-total{font-family:'Bebas Neue';font-size:22px;color:var(--green);letter-spacing:1px;}
+.print-btn{padding:6px 14px;border-radius:8px;border:2px solid rgba(240,165,0,.4);background:rgba(240,165,0,.08);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;}
+.print-btn:hover{border-color:var(--accent);background:rgba(240,165,0,.16);}
+.proj-body{padding:14px 18px 18px;}
+.mtable{width:100%;border-collapse:collapse;font-size:12.5px;}
+.mtable th{text-align:left;padding:5px 5px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.mtable td{padding:7px 5px;border-bottom:1px solid rgba(44,49,85,.5);vertical-align:middle;}
+.mtable tr:last-child td{border-bottom:none;}
+.mat-name{font-weight:600;}
+.mat-qty{font-family:'Bebas Neue';font-size:16px;letter-spacing:.5px;color:var(--accent);}
+.mat-unit{color:var(--muted);font-size:10px;}
+.mat-cost{color:var(--green);font-size:12px;font-weight:700;text-align:right;white-space:nowrap;}
+.sec-row td{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding-top:11px;padding-bottom:2px;border-bottom:none;}
+.total-box{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:8px;padding:10px 13px;margin-top:10px;}
+.total-lbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.total-val{font-family:'Bebas Neue';font-size:24px;color:var(--green);letter-spacing:1px;}
+
+/* ══ ADMIN PANEL ══ */
+.admin-panel{background:rgba(240,165,0,.05);border:2px solid rgba(240,165,0,.2);border-radius:12px;padding:16px;margin-bottom:20px;}
+.admin-title{font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.user-list{display:flex;flex-direction:column;gap:8px;}
+.user-item{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
+.user-info{font-size:13px;font-weight:600;}
+.user-info span{font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;}
+.user-actions{display:flex;gap:6px;}
+.approve-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--green);color:#000;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.reject-btn{padding:5px 12px;border-radius:6px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
+.approved-tag{font-size:10px;color:var(--green);font-weight:700;padding:3px 8px;border-radius:10px;background:rgba(61,207,130,.1);border:1px solid rgba(61,207,130,.3);}
+
+/* ══ SETTINGS MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--panel);border:2px solid var(--border);border-radius:16px;padding:28px;width:480px;max-width:95vw;animation:fadeUp .25s ease;}
+.modal-title{font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--accent);margin-bottom:20px;}
+.modal-field{margin-bottom:14px;}
+.modal-field label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+.btn-primary{padding:9px 22px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer;}
+.btn-ghost{padding:9px 18px;background:transparent;border:2px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ══ PRINT ══ */
+.print-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 20px;}
+.print-overlay.open{display:flex;}
+.print-wrap{background:#fff;width:794px;max-width:100%;min-height:400px;border-radius:4px;padding:48px 52px;color:#1a1a2e;font-family:'Inter',sans-serif;position:relative;}
+.print-close{position:fixed;top:16px;right:24px;padding:8px 18px;background:var(--red);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:13px;cursor:pointer;z-index:2100;}
+.print-print-btn{position:fixed;top:16px;right:120px;padding:8px 18px;background:var(--accent);border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer;z-index:2100;}
+.est-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:18px;border-bottom:3px solid #1a1a2e;}
+.est-company-name{font-family:'Bebas Neue';font-size:28px;letter-spacing:3px;color:#1a1a2e;}
+.est-company-sub{font-size:12px;color:#666;margin-top:4px;}
+.est-meta{text-align:right;}
+.est-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;}
+.est-number{font-family:'Bebas Neue';font-size:26px;color:#e05520;letter-spacing:2px;}
+.est-date{font-size:12px;color:#444;}
+.est-client-block{background:#f5f5f5;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;gap:40px;}
+.ecf-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.ecf-val{font-size:14px;font-weight:700;color:#1a1a2e;}
+.est-obj-block{margin-bottom:18px;}
+.est-obj-title{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.est-obj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.est-obj-item{background:#f9f9f9;border:1px solid #e0e0e0;border-radius:6px;padding:7px 10px;}
+.oi-label{font-size:9px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.oi-val{font-size:13px;font-weight:700;color:#1a1a2e;margin-top:2px;}
+.est-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px;}
+.est-table th{background:#1a1a2e;color:#fff;padding:8px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.est-table th:last-child{text-align:right;}
+.est-table td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:middle;}
+.est-table tr:last-child td{border-bottom:none;}
+.est-sec-row td{background:#f0f0f0;font-size:9px;font-weight:700;letter-spacing:1.5px;color:#666;text-transform:uppercase;padding:5px 10px;border-bottom:none;}
+.est-qty{font-weight:700;color:#1a1a2e;}
+.est-unit{color:#999;font-size:11px;}
+.est-cost{font-weight:700;color:#1a1a2e;text-align:right;}
+.est-total-row{display:flex;justify-content:flex-end;margin-top:8px;}
+.est-total-box{background:#1a1a2e;color:#fff;padding:14px 24px;border-radius:8px;display:flex;align-items:center;gap:24px;}
+.est-total-label{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.7;}
+.est-total-val{font-family:'Bebas Neue';font-size:28px;letter-spacing:1px;color:#f0a500;}
+.est-note{margin-top:20px;padding:10px 14px;background:#fff8e6;border-left:4px solid #f0a500;font-size:11px;color:#666;line-height:1.6;}
+.est-sign{margin-top:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+.sign-label{font-size:10px;color:#999;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:22px;}
+.sign-line{border-top:1px solid #ccc;padding-top:4px;font-size:10px;color:#bbb;}
+.est-footer{margin-top:28px;padding-top:14px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:11px;color:#999;}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+@media print{
+  body>*:not(.print-overlay){display:none!important;}
+  .print-overlay{position:static!important;display:block!important;background:none!important;padding:0!important;}
+  .print-close,.print-print-btn{display:none!important;}
+  .print-wrap{box-shadow:none!important;border-radius:0!important;padding:18mm 16mm!important;}
+  @page{margin:0;size:A4;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div class="auth-screen active" id="loginScreen">
+  <div class="auth-logo">КаркасПро</div>
+  <div class="auth-sub">Каркасное строительство</div>
+  <div class="auth-box">
+    <div class="auth-title">Вход в систему</div>
+    <div class="auth-error" id="loginError"></div>
+    <div class="auth-field"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+    <div class="auth-field"><label>Пароль</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+    <button class="auth-btn" onclick="doLogin()">ВОЙТИ</button>
+    <div class="auth-switch">Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a></div>
+  </div>
+</div>
+
+<!-- ══ REGISTER SCREEN ══ -->
+<div class="auth-screen" id="registerScreen">
+  <div class="auth-logo">КаркасПро</div>
+  <div class="auth-sub">Каркасное строительство</div>
+  <div class="auth-box">
+    <div class="auth-title">Регистрация</div>
+    <div class="auth-error" id="regError"></div>
+    <div class="auth-field"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+    <div class="auth-field"><label>Пароль (мин. 6 символов)</label><input type="password" id="regPass" placeholder="••••••••"></div>
+    <div class="auth-field"><label>Ваше имя</label><input type="text" id="regName" placeholder="Иван Иванов"></div>
+    <button class="auth-btn" onclick="doRegister()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    <div class="auth-switch">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
+  </div>
+</div>
+
+<!-- ══ PENDING SCREEN ══ -->
+<div class="pending-screen" id="pendingScreen">
+  <div class="pending-icon">⏳</div>
+  <div class="pending-title">Ожидание подтверждения</div>
+  <div class="pending-text">Ваш аккаунт зарегистрирован.<br>Администратор должен одобрить доступ.<br>Обычно это занимает несколько минут.</div>
+  <button class="pending-logout" onclick="doLogout()">Выйти</button>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div class="header" id="appHeader">
+  <div class="logo">КаркасПро</div>
+  <div class="header-right">
+    <span class="proj-count" id="projCount"></span>
+    <span class="sync-badge">🟢 ОНЛАЙН</span>
+    <span class="user-email" id="userEmailBadge"></span>
+    <button class="hdr-btn" onclick="openSettings()">⚙ Реквизиты</button>
+    <button class="hdr-btn danger" onclick="doLogout()">Выйти</button>
+  </div>
+</div>
+
+<!-- ══ APP BODY ══ -->
+<div class="app-body" id="appBody">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-title" style="margin-top:2px;">Проект</div>
+  <div class="proj-bar">
+    <select id="projSelect" class="proj-select" onchange="loadProject()">
+      <option value="">— новый проект —</option>
+    </select>
+    <div class="icon-btn" title="Сохранить" onclick="saveProject()">💾</div>
+    <div class="icon-btn del" title="Удалить" onclick="deleteProject()">🗑</div>
+  </div>
+  <div class="field" style="margin-top:8px;">
+    <span class="flabel">Название / клиент</span>
+    <input type="text" id="projName" placeholder="Иванов · Хозблок 6×4">
+  </div>
+  <div class="sep"></div>
+  <div class="sb-title">Тип постройки</div>
+  <div class="type-grid">
+    <div class="ttab active" id="tb-house" onclick="setType('house',this)"><span class="ico">🏠</span>Жилой дом</div>
+    <div class="ttab" id="tb-shed"  onclick="setType('shed',this)"><span class="ico">🛖</span>Хозблок</div>
+    <div class="ttab" id="tb-banya" onclick="setType('banya',this)"><span class="ico">♨️</span>Баня</div>
+  </div>
+  <div class="sb-title">Размеры</div>
+  <div class="field">
+    <span class="flabel">Длина × Ширина (м)</span>
+    <div class="two">
+      <input type="number" id="fLen" value="6" min="2" max="30" step="0.5">
+      <input type="number" id="fWid" value="4" min="2" max="30" step="0.5">
+    </div>
+  </div>
+  <div class="field"><span class="flabel">Высота стен (м)</span><input type="number" id="fH" value="2.5" min="1.8" max="4" step="0.1"></div>
+  <div class="field"><span class="flabel">Этажей</span>
+    <div class="pills">
+      <div class="pill active" onclick="setFloors(1,this)">1 этаж</div>
+      <div class="pill" onclick="setFloors(2,this)">2 этажа</div>
+      <div class="pill" onclick="setFloors(3,this)">3 этажа</div>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="sb-title">Каркас</div>
+  <div class="field"><span class="flabel">Шаг стоек</span>
+    <select id="fStep">
+      <option value="0.6">600 мм (стандарт)</option>
+      <option value="0.625">625 мм (под OSB)</option>
+      <option value="0.5">500 мм (усиленный)</option>
+    </select>
+  </div>
+  <div class="field"><span class="flabel">Сечение стоек</span>
+    <div class="pills">
+      <div class="pill active" onclick="setSection('150x50',this)">150×50</div>
+      <div class="pill" onclick="setSection('100x50',this)">100×50</div>
+      <div class="pill" onclick="setSection('200x50',this)">200×50</div>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="sb-title">Кровля</div>
+  <div class="field"><span class="flabel">Тип крыши</span>
+    <div class="pills">
+      <div class="pill active" onclick="setRoof('shed',this)">Односкатная</div>
+      <div class="pill" onclick="setRoof('gable',this)">Двускатная</div>
+      <div class="pill" onclick="setRoof('hip',this)">Вальмовая</div>
+      <div class="pill" onclick="setRoof('flat',this)">Плоская</div>
+    </div>
+  </div>
+  <div class="field"><span class="flabel">Угол ската (°)</span><input type="number" id="fAngle" value="25" min="5" max="60" step="5"></div>
+  <div class="field"><span class="flabel">Кровельный материал</span>
+    <select id="fRoofMat">
+      <option value="Металлопрофиль">Металлопрофиль</option>
+      <option value="Ондулин">Ондулин</option>
+      <option value="Поликарбонат">Поликарбонат</option>
+      <option value="Мягкая черепица">Мягкая черепица</option>
+    </select>
+  </div>
+  <div class="sep"></div>
+  <div class="sb-title">Элементы</div>
+  <div class="tog on"  id="tog-osb" onclick="tog(this)"><label>Обшивка OSB (1250×2500)</label><div class="sw"></div></div>
+  <div class="tog on"  id="tog-ins" onclick="tog(this)"><label>Утеплитель (минвата)</label><div class="sw"></div></div>
+  <div class="tog on"  id="tog-vap" onclick="tog(this)"><label>Пароизоляция / ветрозащита</label><div class="sw"></div></div>
+  <div class="tog"     id="tog-flo" onclick="tog(this)"><label>Пол (лаги + половая доска)</label><div class="sw"></div></div>
+  <div class="sep"></div>
+  <div class="sb-title">Фундамент</div>
+  <div class="field"><span class="flabel">Тип</span>
+    <div class="pills">
+      <div class="pill active" onclick="setFnd('screw',this)">Винтовые сваи</div>
+      <div class="pill" onclick="setFnd('column',this)">Столбчатый</div>
+      <div class="pill" onclick="setFnd('none',this)">Без фундамента</div>
+    </div>
+  </div>
+  <div id="fnd-options">
+    <div class="field"><span class="flabel">Шаг свай / столбов (м)</span>
+      <div class="pills">
+        <div class="pill active" onclick="setPileStep(1.5,this)">1.5 м</div>
+        <div class="pill" onclick="setPileStep(2,this)">2.0 м</div>
+        <div class="pill" onclick="setPileStep(2.5,this)">2.5 м</div>
+      </div>
+    </div>
+    <div class="field"><span class="flabel">Диаметр сваи</span>
+      <select id="fPileDia"><option value="89">89 мм</option><option value="108" selected>108 мм</option><option value="133">133 мм</option></select>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="sb-title">Цены (₽ за ед.)</div>
+  <div class="price-grid">
+    <div class="price-item"><label>Брус (м³)</label><input type="number" id="p-brus" value="12000"></div>
+    <div class="price-item"><label>OSB (лист)</label><input type="number" id="p-osb" value="900"></div>
+    <div class="price-item"><label>Минвата (м³)</label><input type="number" id="p-ins" value="2800"></div>
+    <div class="price-item"><label>Кровля (м²)</label><input type="number" id="p-roof" value="500"></div>
+    <div class="price-item"><label>Пароиз. (м²)</label><input type="number" id="p-vap" value="35"></div>
+    <div class="price-item"><label>Доска пола (м²)</label><input type="number" id="p-flo" value="850"></div>
+    <div class="price-item"><label>Свая / столб</label><input type="number" id="p-pile" value="2200"></div>
+    <div class="price-item"><label>Крепёж (%)</label><input type="number" id="p-fix" value="8"></div>
+  </div>
+  <div class="sep"></div>
+  <button class="calc-btn" id="calcBtn" onclick="saveProject()">⚡ РАССЧИТАТЬ И СОХРАНИТЬ</button>
+  <div class="waste-hint">+10 % запас на отходы учтён автоматически</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div id="adminArea"></div>
+  <div class="empty" id="emptyBox">
+    <div class="eico">📐</div>
+    <p>Введите название проекта, задайте параметры<br>и нажмите <strong style="color:var(--accent)">«Рассчитать и сохранить»</strong></p>
+  </div>
+  <div id="resultsBox" style="display:none"><div class="proj-list" id="projList"></div></div>
+</div>
+
+</div><!-- /app-body -->
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title">⚙ Реквизиты компании</div>
+    <div class="modal-field"><label>Название компании</label><input type="text" id="s-company" placeholder="ООО КаркасСтрой"></div>
+    <div class="modal-field"><label>Имя прораба</label><input type="text" id="s-foreman" placeholder="Иван Иванов"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeSettings()">Отмена</button>
+      <button class="btn-primary" onclick="saveSettings()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT OVERLAY -->
+<div class="print-overlay" id="printOverlay">
+  <button class="print-close" onclick="closePrint()">✕ Закрыть</button>
+  <button class="print-print-btn" onclick="window.print()">🖨 Печать / PDF</button>
+  <div class="print-wrap" id="printContent"></div>
+</div>
+
+<!-- ══ FIREBASE + APP SCRIPT ══ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, updateDoc }
+  from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAyTga41JojZqk_P2LL1kLbId0qEMyhYq4",
+  authDomain: "karkas-pro.firebaseapp.com",
+  projectId: "karkas-pro",
+  storageBucket: "karkas-pro.firebasestorage.app",
+  messagingSenderId: "406953071849",
+  appId: "1:406953071849:web:598abe7c9d253e2bee8c78"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const WASTE = 1.10;
+// First registered user becomes admin
+const ADMIN_EMAIL = null; // will be auto-detected
+
+let buildType='house', roofType='shed', fndType='screw';
+let floors=1, section='150x50', pileStep=1.5;
+let allProjects={}, currentUser=null, currentUserData=null;
+let unsubProjects=null, unsubUsers=null;
+
+// ── SCREENS ──
+function showScreen(name){
+  document.getElementById('loginScreen').classList.toggle('active', name==='login');
+  document.getElementById('registerScreen').classList.toggle('active', name==='register');
+  document.getElementById('pendingScreen').classList.toggle('active', name==='pending');
+  document.getElementById('appHeader').classList.toggle('active', name==='app');
+  document.getElementById('appBody').classList.toggle('active', name==='app');
+}
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, async (user) => {
+  if(!user){ showScreen('login'); stopListeners(); return; }
+  currentUser = user;
+  document.getElementById('userEmailBadge').textContent = user.email;
+
+  // Get or create user doc
+  const uRef = doc(db, 'users', user.uid);
+  let uSnap = await getDoc(uRef);
+  if(!uSnap.exists()){
+    // First user ever = auto-admin
+    const allUsersSnap = await import("https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js")
+      .then(m => m.getDocs(m.collection(db,'users')));
+    const isFirst = allUsersSnap.empty;
+    await setDoc(uRef, {
+      email: user.email,
+      name: user.displayName || user.email.split('@')[0],
+      approved: isFirst,
+      admin: isFirst,
+      createdAt: new Date().toISOString()
+    });
+    uSnap = await getDoc(uRef);
+  }
+  currentUserData = uSnap.data();
+
+  if(!currentUserData.approved){
+    showScreen('pending');
+    // Listen for approval
+    onSnapshot(uRef, snap => {
+      if(snap.data()?.approved){ location.reload(); }
+    });
+    return;
+  }
+
+  showScreen('app');
+  startListeners();
+  loadSettingsIntoForm();
+});
+
+function stopListeners(){
+  if(unsubProjects){ unsubProjects(); unsubProjects=null; }
+  if(unsubUsers){ unsubUsers(); unsubUsers=null; }
+}
+
+function startListeners(){
+  // Projects realtime
+  unsubProjects = onSnapshot(collection(db,'projects'), snap => {
+    allProjects={};
+    snap.forEach(d=>{ allProjects[d.id]=d.data(); });
+    refreshSelect();
+    renderAll();
+  });
+
+  // Users (for admin panel)
+  if(currentUserData?.admin){
+    unsubUsers = onSnapshot(collection(db,'users'), snap => {
+      renderAdminPanel(snap.docs.map(d=>({id:d.id,...d.data()})));
+    });
+  }
+}
+
+// ── AUTH ACTIONS ──
+window.doLogin = async function(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginError');
+  err.classList.remove('show');
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e){
+    err.textContent = e.code==='auth/invalid-credential' ? 'Неверный email или пароль' : e.message;
+    err.classList.add('show');
+  }
+};
+
+window.doRegister = async function(){
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  const name  = document.getElementById('regName').value.trim();
+  const err   = document.getElementById('regError');
+  err.classList.remove('show');
+  if(!name){ err.textContent='Введите ваше имя'; err.classList.add('show'); return; }
+  try{
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    // Save extra info — auth state will handle the rest
+    await setDoc(doc(db,'users',cred.user.uid),{
+      email, name, approved:false, admin:false,
+      createdAt: new Date().toISOString()
+    });
+  } catch(e){
+    const msgs = {
+      'auth/email-already-in-use':'Этот email уже зарегистрирован',
+      'auth/weak-password':'Пароль слишком короткий (минимум 6 символов)',
+      'auth/invalid-email':'Некорректный email'
+    };
+    err.textContent = msgs[e.code]||e.message;
+    err.classList.add('show');
+  }
+};
+
+window.doLogout = async function(){
+  stopListeners();
+  await signOut(auth);
+};
+
+window.showLogin    = ()=>showScreen('login');
+window.showRegister = ()=>showScreen('register');
+
+// ── ADMIN PANEL ──
+function renderAdminPanel(users){
+  const area = document.getElementById('adminArea');
+  const pending = users.filter(u=>!u.approved);
+  const approved = users.filter(u=>u.approved && u.id!==currentUser?.uid);
+
+  if(!users.length){ area.innerHTML=''; return; }
+
+  let html=`<div class="admin-panel">
+    <div class="admin-title">👑 ПАНЕЛЬ АДМИНИСТРАТОРА
+      <span style="font-size:11px;color:var(--muted);font-weight:400;font-family:'Inter';">Пользователей: ${users.length}</span>
+    </div>
+    <div class="user-list">`;
+
+  if(pending.length){
+    html+=`<div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Ожидают одобрения (${pending.length})</div>`;
+    pending.forEach(u=>{
+      html+=`<div class="user-item">
+        <div class="user-info">${u.name||u.email}<span>${u.email} · ${new Date(u.createdAt).toLocaleDateString('ru')}</span></div>
+        <div class="user-actions">
+          <button class="approve-btn" onclick="approveUser('${u.id}')">✓ Одобрить</button>
+          <button class="reject-btn" onclick="rejectUser('${u.id}')">✕ Отклонить</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  if(approved.length){
+    html+=`<div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px;">Одобренные</div>`;
+    approved.forEach(u=>{
+      html+=`<div class="user-item">
+        <div class="user-info">${u.name||u.email}<span>${u.email}</span></div>
+        <span class="approved-tag">✓ Одобрен</span>
+      </div>`;
+    });
+  }
+
+  html+=`</div></div>`;
+  area.innerHTML=html;
+}
+
+window.approveUser = async function(uid){
+  await updateDoc(doc(db,'users',uid),{approved:true});
+};
+window.rejectUser = async function(uid){
+  if(!confirm('Удалить пользователя?')) return;
+  await deleteDoc(doc(db,'users',uid));
+  // Also delete from auth - we can only delete from client-side the current user
+  // So we just remove the Firestore doc which blocks access
+};
+
+// ── SETTINGS ──
+function loadSettingsIntoForm(){
+  const s = JSON.parse(localStorage.getItem('karkas_settings')||'{}');
+  if(s.company) document.getElementById('s-company').value=s.company;
+  if(s.foreman) document.getElementById('s-foreman').value=s.foreman;
+}
+window.openSettings  = ()=>document.getElementById('settingsModal').classList.add('open');
+window.closeSettings = ()=>document.getElementById('settingsModal').classList.remove('open');
+window.saveSettings  = function(){
+  localStorage.setItem('karkas_settings', JSON.stringify({
+    company: document.getElementById('s-company').value.trim(),
+    foreman: document.getElementById('s-foreman').value.trim(),
+  }));
+  closeSettings();
+};
+function loadSettings(){ try{return JSON.parse(localStorage.getItem('karkas_settings')||'{}')}catch(e){return{}} }
+
+// ── PROJECT SELECT ──
+function refreshSelect(){
+  const keys=Object.keys(allProjects).sort((a,b)=>{
+    return (allProjects[b].savedAt||'') > (allProjects[a].savedAt||'') ? 1 : -1;
+  });
+  const sel=document.getElementById('projSelect');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— новый проект —</option>';
+  keys.forEach(k=>{
+    const o=document.createElement('option');
+    o.value=k; o.textContent=k; sel.appendChild(o);
+  });
+  if(cur && allProjects[cur]) sel.value=cur;
+  document.getElementById('projCount').textContent=keys.length?`Проектов: ${keys.length}`:'';
+}
+
+window.loadProject = function(){
+  const name=document.getElementById('projSelect').value;
+  if(!name) return;
+  const p=allProjects[name]; if(!p) return;
+  document.getElementById('projName').value=name;
+  document.getElementById('fLen').value=p.L;
+  document.getElementById('fWid').value=p.W;
+  document.getElementById('fH').value=p.H;
+  document.getElementById('fAngle').value=p.angle||25;
+  document.getElementById('fRoofMat').value=p.roofMat||'Металлопрофиль';
+  document.getElementById('fStep').value=p.step||0.6;
+  document.getElementById('fPileDia').value=p.pileDia||'108';
+  const pr=p.prices||{};
+  ['brus','osb','ins','roof','vap','flo','pile','fix'].forEach(k=>{
+    const el=document.getElementById('p-'+k); if(el&&pr[k]!=null) el.value=pr[k];
+  });
+  setToggle('tog-osb',p.incOSB!==false); setToggle('tog-ins',p.incIns!==false);
+  setToggle('tog-vap',p.incVap!==false); setToggle('tog-flo',!!p.incFlo);
+  buildType=p.type_key||'house'; roofType=p.roofType||'shed';
+  fndType=p.fndType||'screw'; floors=p.floors||1;
+  section=p.section||'150x50'; pileStep=p.pileStep||1.5;
+  syncUI();
+};
+
+window.saveProject = async function(){
+  const name=document.getElementById('projName').value.trim();
+  if(!name){alert('Введите название проекта');return;}
+  const btn=document.getElementById('calcBtn');
+  btn.textContent='⏳ СОХРАНЕНИЕ...'; btn.disabled=true;
+  const p=compute();
+  p.savedAt=new Date().toISOString();
+  p.savedBy=currentUser?.email||'';
+  await setDoc(doc(db,'projects',name),p);
+  document.getElementById('projSelect').value=name;
+  btn.textContent='⚡ РАССЧИТАТЬ И СОХРАНИТЬ'; btn.disabled=false;
+};
+
+window.deleteProject = async function(){
+  const name=document.getElementById('projSelect').value;
+  if(!name) return;
+  if(!confirm(`Удалить «${name}»?`)) return;
+  await deleteDoc(doc(db,'projects',name));
+  document.getElementById('projSelect').value='';
+  document.getElementById('projName').value='';
+};
+
+// ── CONTROLS ──
+window.setType=(t,el)=>{buildType=t;ap(el);};
+window.setRoof=(r,el)=>{roofType=r;ap(el);};
+window.setFnd=(f,el)=>{fndType=f;ap(el);document.getElementById('fnd-options').style.display=f==='none'?'none':'';};
+window.setFloors=(n,el)=>{floors=n;ap(el);};
+window.setSection=(s,el)=>{section=s;ap(el);};
+window.setPileStep=(s,el)=>{pileStep=s;ap(el);};
+function ap(el){const c=el.closest('.pills')||el.closest('.type-grid');if(c)c.querySelectorAll('.pill,.ttab').forEach(e=>e.classList.remove('active'));el.classList.add('active');}
+window.tog=(el)=>el.classList.toggle('on');
+function isOn(id){return document.getElementById(id).classList.contains('on');}
+function setToggle(id,val){const el=document.getElementById(id);if(!el)return;val?el.classList.add('on'):el.classList.remove('on');}
+function num(id){return parseFloat(document.getElementById(id).value)||0;}
+function syncUI(){
+  ['house','shed','banya'].forEach(t=>{const el=document.getElementById('tb-'+t);if(el)el.classList.toggle('active',t===buildType);});
+  document.getElementById('fnd-options').style.display=fndType==='none'?'none':'';
+}
+
+// ── COMPUTE ──
+function compute(){
+  const L=num('fLen')||6,W=num('fWid')||4,H=num('fH')||2.5;
+  const step=parseFloat(document.getElementById('fStep').value)||0.6;
+  const angle=num('fAngle')||25;
+  const roofMat=document.getElementById('fRoofMat').value;
+  const pileDia=document.getElementById('fPileDia').value;
+  const prices={};
+  ['brus','osb','ins','roof','vap','flo','pile','fix'].forEach(k=>prices[k]=num('p-'+k));
+  const perim=2*(L+W),wallArea=perim*H*floors;
+  const studCount=Math.ceil(perim/step)+4;
+  const studM=Math.ceil(studCount*H*floors*WASTE);
+  const plateM=Math.ceil(perim*2*floors*WASTE);
+  const bridgeM=Math.ceil(perim*floors*WASTE);
+  const rad=angle*Math.PI/180;
+  let roofArea=0,rafterM=0,ridgeM=0,rafterCount=0,rafterLen=0;
+  if(roofType==='shed'){rafterLen=W/Math.cos(rad);roofArea=L*rafterLen;rafterCount=Math.ceil(L/step)+1;}
+  else if(roofType==='gable'){rafterLen=(W/2)/Math.cos(rad);roofArea=L*rafterLen*2;rafterCount=(Math.ceil(L/step)+1)*2;ridgeM=Math.ceil(L*WASTE);}
+  else if(roofType==='hip'){rafterLen=(W/2)/Math.cos(rad);roofArea=(L*W)/Math.cos(rad);rafterCount=Math.ceil((L+W)/step)*2;ridgeM=Math.max(0,Math.ceil((L-W)*WASTE));}
+  else{rafterLen=W;roofArea=L*W;rafterCount=Math.ceil(L/step)+1;}
+  rafterM=Math.ceil(rafterCount*rafterLen*WASTE);
+  const roofCover=Math.ceil(roofArea*WASTE);
+  const sec=section.split('x').map(Number);
+  const csa=(sec[0]/1000)*(sec[1]/1000);
+  const timberM3=Math.ceil((studM+plateM+bridgeM+rafterM+(ridgeM||0))*csa*100)/100;
+  const osbSheet=1.25*2.5;
+  const osbW=isOn('tog-osb')?Math.ceil(wallArea*2*WASTE/osbSheet):0;
+  const osbR=isOn('tog-osb')?Math.ceil(roofArea*WASTE/osbSheet):0;
+  const osbTot=osbW+osbR;
+  const insWall=isOn('tog-ins')?Math.ceil(wallArea*0.15*WASTE*10)/10:0;
+  const insRoof=isOn('tog-ins')?Math.ceil(roofArea*0.20*WASTE*10)/10:0;
+  const insTot=Math.ceil((insWall+insRoof)*10)/10;
+  const vapArea=isOn('tog-vap')?Math.ceil((wallArea+roofArea)*WASTE):0;
+  let floorJoistM=0,floorBoardM2=0,floorVol=0;
+  if(isOn('tog-flo')){const jc=Math.ceil(L/0.6)+1;floorJoistM=Math.ceil(jc*W*WASTE);floorBoardM2=Math.ceil(L*W*WASTE);floorVol=Math.ceil(floorJoistM*csa*100)/100;}
+  const totalM3=Math.ceil((timberM3+floorVol)*100)/100;
+  let pileCount=0;
+  if(fndType!=='none')pileCount=(Math.ceil(L/pileStep)+1)*(Math.ceil(W/pileStep)+1);
+  const typeLabel={house:'Жилой дом',shed:'Хозблок / сарай',banya:'Баня'};
+  const cTimber=Math.round(totalM3*prices.brus);
+  const cFix=Math.round(cTimber*prices.fix/100);
+  const cOSB=Math.round(osbTot*prices.osb);
+  const cIns=Math.round(insTot*prices.ins);
+  const cRoof=Math.round(roofCover*prices.roof);
+  const cVap=Math.round(vapArea*prices.vap);
+  const cFlo=isOn('tog-flo')?Math.round(floorBoardM2*prices.flo):0;
+  const cPile=Math.round(pileCount*prices.pile);
+  const total=cTimber+cFix+cOSB+cIns+cRoof+cVap+cFlo+cPile;
+  return{
+    type:typeLabel[buildType]||'Постройка',type_key:buildType,
+    L,W,H,floors,angle,step,section,roofType,roofMat,fndType,pileStep,pileDia,
+    studCount,studM,plateM,bridgeM,rafterCount,rafterM,ridgeM:ridgeM||0,
+    totalM3,roofCover,osbW,osbR,osbTot,insWall,insRoof,insTot,
+    vapArea,floorJoistM,floorBoardM2,pileCount,
+    cTimber,cFix,cOSB,cIns,cRoof,cVap,cFlo,cPile,total,
+    incOSB:isOn('tog-osb'),incIns:isOn('tog-ins'),incVap:isOn('tog-vap'),incFlo:isOn('tog-flo'),
+    prices
+  };
+}
+
+// ── RENDER APP ──
+function renderAll(){
+  const keys=Object.keys(allProjects).sort((a,b)=>(allProjects[b].savedAt||'')>(allProjects[a].savedAt||'')?1:-1);
+  document.getElementById('emptyBox').style.display=keys.length?'none':'block';
+  document.getElementById('resultsBox').style.display=keys.length?'block':'none';
+  document.getElementById('projList').innerHTML=keys.map(k=>card(k,allProjects[k])).join('');
+}
+
+function card(name,p){
+  const saved=p.savedAt?new Date(p.savedAt).toLocaleString('ru'):'—';
+  let t=`<div class="proj-card">
+  <div class="proj-card-header">
+    <div>
+      <div class="proj-name">${name}</div>
+      <div class="proj-meta">${p.type} · ${p.L}×${p.W}м · выс.${p.H}м · ${p.floors}эт. · ${saved}${p.savedBy?' · '+p.savedBy:''}</div>
+    </div>
+    <div class="proj-actions">
+      <span class="proj-total">${p.total.toLocaleString()} ₽</span>
+      <button class="print-btn" onclick="openEstimate('${name.replace(/'/g,"\\'")}')">📄 Смета</button>
+    </div>
+  </div>
+  <div class="proj-body">
+  <table class="mtable">
+    <thead><tr><th>Материал</th><th>Кол-во</th><th>Ед.</th><th style="text-align:right">Стоимость</th></tr></thead>
+    <tbody>`;
+  t+=sr('КАРКАС');
+  t+=r('Брус — стойки, обвязки, стропила',p.totalM3,'м³',p.cTimber);
+  t+=r('Крепёж, саморезы, уголки','~','',p.cFix);
+  t+=sr('КРОВЛЯ');
+  t+=r(p.roofMat,p.roofCover,'м²',p.cRoof);
+  if(p.incOSB){t+=sr('ОБШИВКА OSB');t+=r('Стены (2 стороны)',p.osbW,'лист');t+=r('Кровля',p.osbR,'лист');t+=r('OSB итого',p.osbTot,'лист',p.cOSB);}
+  if(p.incIns){t+=sr('УТЕПЛИТЕЛЬ');t+=r('Стены 150мм',p.insWall,'м³');t+=r('Кровля 200мм',p.insRoof,'м³');t+=r('Итого',p.insTot,'м³',p.cIns);}
+  if(p.incVap){t+=sr('ПЛЁНКИ');t+=r('Пароизоляция + ветрозащита',p.vapArea,'м²',p.cVap);}
+  if(p.incFlo){t+=sr('ПОЛ');t+=r('Лаги',p.floorJoistM,'пм');t+=r('Половая доска',p.floorBoardM2,'м²',p.cFlo);}
+  if(p.pileCount>0){
+    t+=sr('ФУНДАМЕНТ');
+    t+=r(p.fndType==='screw'?`Сваи Ø${p.pileDia}мм`:`Столбы`,p.pileCount,'шт',p.cPile);
+  }
+  t+=`</tbody></table>
+  <div class="total-box"><span class="total-lbl">ИТОГО ~</span><span class="total-val">${p.total.toLocaleString()} ₽</span></div>
+  </div></div>`;
+  return t;
+}
+function r(name,qty,unit,cost){return`<tr><td class="mat-name">${name}</td><td class="mat-qty">${qty}</td><td class="mat-unit">${unit||''}</td><td class="mat-cost">${cost!=null?cost.toLocaleString()+' ₽':''}</td></tr>`;}
+function sr(label){return`<tr class="sec-row"><td colspan="4">${label}</td></tr>`;}
+
+// ── ESTIMATE ──
+window.openEstimate = function(name){
+  const p=allProjects[name]; if(!p) return;
+  const s=loadSettings();
+  const today=new Date().toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
+  const num=new Date().toLocaleDateString('ru-RU').replace(/\./g,'');
+  const roofMap={shed:'Односкатная',gable:'Двускатная',hip:'Вальмовая',flat:'Плоская'};
+  const fndMap={screw:'Винтовые сваи',column:'Столбчатый',none:'Без фундамента'};
+  let rows='';
+  rows+=esr('Каркас');rows+=er('Брус (стойки, обвязки, стропила)',p.totalM3,'м³',p.cTimber);rows+=er('Крепёж, саморезы, уголки','—','',p.cFix);
+  rows+=esr('Кровля');rows+=er(p.roofMat,p.roofCover,'м²',p.cRoof);
+  if(p.incOSB){rows+=esr('Обшивка OSB');rows+=er('Плиты OSB 1250×2500',p.osbTot,'лист',p.cOSB);}
+  if(p.incIns){rows+=esr('Утеплитель');rows+=er('Минеральная вата',p.insTot,'м³',p.cIns);}
+  if(p.incVap){rows+=esr('Плёнки');rows+=er('Пароизоляция + ветрозащита',p.vapArea,'м²',p.cVap);}
+  if(p.incFlo){rows+=esr('Пол');rows+=er('Лаги + половая доска',p.floorBoardM2,'м²',p.cFlo);}
+  if(p.pileCount>0){rows+=esr('Фундамент');rows+=er(p.fndType==='screw'?`Сваи Ø${p.pileDia}мм`:'Столбы',p.pileCount,'шт',p.cPile);}
+  const co=s.company||'КаркасПро';
+  document.getElementById('printContent').innerHTML=`
+  <div class="est-header">
+    <div><div class="est-company-name">${co}</div><div class="est-company-sub">Строительство по каркасной технологии</div></div>
+    <div class="est-meta"><div class="est-label">Смета №</div><div class="est-number">${num}</div><div class="est-date">от ${today}</div></div>
+  </div>
+  <div class="est-client-block">
+    <div><div class="ecf-label">Проект / Клиент</div><div class="ecf-val">${name}</div></div>
+    <div><div class="ecf-label">Тип постройки</div><div class="ecf-val">${p.type}</div></div>
+  </div>
+  <div class="est-obj-block">
+    <div class="est-obj-title">Параметры объекта</div>
+    <div class="est-obj-grid">
+      <div class="est-obj-item"><div class="oi-label">Размер</div><div class="oi-val">${p.L}×${p.W}м</div></div>
+      <div class="est-obj-item"><div class="oi-label">Высота</div><div class="oi-val">${p.H}м</div></div>
+      <div class="est-obj-item"><div class="oi-label">Этажей</div><div class="oi-val">${p.floors}</div></div>
+      <div class="est-obj-item"><div class="oi-label">Кровля</div><div class="oi-val">${roofMap[p.roofType]||p.roofType}</div></div>
+      <div class="est-obj-item"><div class="oi-label">Покрытие</div><div class="oi-val">${p.roofMat}</div></div>
+      <div class="est-obj-item"><div class="oi-label">Стойки</div><div class="oi-val">${p.section}мм</div></div>
+      <div class="est-obj-item"><div class="oi-label">Фундамент</div><div class="oi-val">${fndMap[p.fndType]||'—'}</div></div>
+    </div>
+  </div>
+  <table class="est-table">
+    <thead><tr><th style="width:55%">Наименование</th><th>Кол-во</th><th>Ед.</th><th>Сумма, ₽</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="est-total-row"><div class="est-total-box"><span class="est-total-label">Итого материалы:</span><span class="est-total-val">${p.total.toLocaleString()} ₽</span></div></div>
+  <div class="est-note">✔ Запас 10% на отходы включён. ✔ Монтажные работы рассчитываются отдельно. ✔ Цены действительны на дату составления.</div>
+  <div class="est-sign">
+    <div><div class="sign-label">Исполнитель</div><div class="sign-line">${s.foreman||co} / подпись ___________</div></div>
+    <div><div class="sign-label">Заказчик</div><div class="sign-line">${name} / подпись ___________</div></div>
+  </div>
+  <div class="est-footer"><span>${co} · Смета №${num} · ${today}</span><span>КаркасПро</span></div>`;
+  document.getElementById('printOverlay').classList.add('open');
+};
+window.closePrint=()=>document.getElementById('printOverlay').classList.remove('open');
+
+function er(name,qty,unit,cost){return`<tr><td>${name}</td><td class="est-qty">${qty}</td><td class="est-unit">${unit||''}</td><td class="est-cost">${cost!=null?cost.toLocaleString():''}</td></tr>`;}
+function esr(label){return`<tr class="est-sec-row"><td colspan="4">${label}</td></tr>`;}
+
+</script>
+</body>
+</html>
